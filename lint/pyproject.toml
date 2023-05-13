@@ -1,0 +1,92 @@
+[tool.ruff]
+line-length = 88
+
+# Enable Pyflakes `E` and `F` codes by default.
+select = [
+    "E",        # pyflake
+    "F", "W",   # pycodestyle
+    #"D",        # pydocstyle
+    "ICN",      # pyflakes; import convention 
+    "COM",      # flake8; commas
+    "A",        # flake8; builtins 
+    "C4",       # flake8; comprehensions 
+    "B",        # flake8; bugbear
+    "PT",       # flake8; pytest style
+    #"I",        # isort
+    "N",        # pep8 - naming
+    "SIM",      # pep8 - simplify
+    "ARG"       # pep8 - unused arguments
+]
+
+# `F401` (unused imports).
+# `F405` (undefined * imports).
+ignore = [
+    "F401",
+    "F403", 
+    "F405",
+    "F841",
+    "E999",
+    "D103",
+    "E402", # module level import not at top of file
+]
+
+# Never try to fix `F401` (unused imports).
+unfixable = [
+    "F401",
+    "F841",
+    "D103",
+]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+per-file-ignores = {}
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+# Assume Python 3.10.
+target-version = "py310"
+
+
+[tool.ruff.pydocstyle]
+convention = "google"
+
+
+# Unlike Flake8, default to a complexity level of 10.
+[tool.mccabe]
+max-complexity = 10
+
+
+# formatting 
+# auto-adds imports
+[tool.isort]
+lines_before_imports = 1
+lines_after_imports = 1
+
+#add_imports = [ 
+#    "import os", 
+#    "import sys", 
+#    "import json", 
+#    "import subprocess" 
+#]
+#

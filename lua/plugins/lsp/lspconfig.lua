@@ -92,7 +92,7 @@ if not vim.g.vscode then
         local ruff_settings = {
           settings = {
             args = {
-              '--config=/Users/brianli/.config/lintconfig/pyproject.toml',
+              '--config=' .. os.getenv('HOME') .. '/.config/nvim/lint/pyproject.toml',
             }
           }
         }
