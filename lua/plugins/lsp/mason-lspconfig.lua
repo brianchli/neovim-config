@@ -9,12 +9,13 @@ if not vim.g.vscode then
         lsp.setup {
           ensure_installed = {
             "lua_ls",
+            "ruff_lsp",
             "sqlls",
             "yamlls",
             "cmake",
             "dockerls",
+            "astro",
             "tsserver",
-            "ruff_lsp",
             "cssls",
             "eslint",
             "emmet_ls",

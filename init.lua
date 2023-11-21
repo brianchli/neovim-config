@@ -9,7 +9,7 @@ if not vim.g.vscode then
   vim.g.mapleader = ' '
   vim.g.localleader = '\\'
 
-  -- CHANGE DIAGNOSTIC SIGNS FOR WARNINGS
+  -- change diagnostic signs for warnings
   cmd "sign define DiagnosticSignError text=● texthl=DiagnosticSignError"
   cmd "sign define DiagnosticSignWarn text=● texthl=DiagnosticSignWarn"
   cmd "sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo"

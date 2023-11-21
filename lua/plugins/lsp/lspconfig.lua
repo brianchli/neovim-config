@@ -4,10 +4,9 @@ if not vim.g.vscode then
     dependencies = {
       'hrsh7th/nvim-cmp',
       'hrsh7th/cmp-nvim-lsp',
-      -- 'kdarkhan/rust-tools.nvim', -- currently in use as original repo is broken
       'simrat39/rust-tools.nvim',
       'p00f/clangd_extensions.nvim',
-      "SmiteshP/nvim-navic",
+      'SmiteshP/nvim-navic',
     },
     event = { "BufReadPre", "BufNewFile" },
     priority = 950,
@@ -53,6 +52,8 @@ if not vim.g.vscode then
           if client.server_capabilities.documentSymbolProvider then
             navic.attach(client, bufnr)
           end
+          require("clangd_extensions.inlay_hints").setup_autocmd()
+          require("clangd_extensions.inlay_hints").set_inlay_hints()
         end
 
         local py_settings = {
@@ -103,14 +104,13 @@ if not vim.g.vscode then
           init_options = ruff_settings,
         })
         -- enhanced capabilities for c and rust
-        local c_capabilities = lsp_capabilities
-        c_capabilities.offsetEncoding = 'utf-16'
+        -- local c_capabilities = lsp_capabilities
+        --c_capabilities.offsetEncoding = 'utf-16'
         local _, clangd = pcall(require, 'clangd_extensions')
         clangd.setup({
           server = {
             on_attach = on_attach,
-            -- removes error with codespell
-            capabilities = c_capabilities
+            capabilities = lsp_capabilities
           },
         })
         local _, rs = pcall(require, 'rust-tools')
@@ -131,13 +131,15 @@ if not vim.g.vscode then
           'sqlls',
           'dockerls',
           'yamlls',
+          'astro',
+          'clangd',
         }
         for _, lsp in ipairs(servers) do
           if lsp == 'emmet_ls' then
             lspconfig[lsp].setup({
               on_attach = on_attach,
               capabilities = lsp_capabilities,
-              filetypes = { 'javascript', 'typescript' }
+              filetypes = { 'javascript', 'typescript', 'astro' }
             })
           end
           lspconfig[lsp].setup({

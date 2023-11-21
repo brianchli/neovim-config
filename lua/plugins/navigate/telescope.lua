@@ -1,8 +1,8 @@
 if not vim.g.vscode then
   return {
     'nvim-telescope/telescope.nvim',
-    version = '0.1.0',
-    dependencies = 'nvim-lua/plenary.nvim',
+    tag = '0.1.4',
+    dependencies = { 'nvim-lua/plenary.nvim' },
     priority = 900,
     keys = {
       { "<leader>ff", "<cmd>Telescope find_files<cr>",  desc = "Find files" },
@@ -12,12 +12,12 @@ if not vim.g.vscode then
       { "<leader>fb", "<cmd>Telescope buffers<cr>",     desc = "Buffers" },
       { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
     },
-    config = function()
-      local status, _ = pcall(require, 'telescope')
-      if status then
-        local map = vim.keymap.set
-        local telescope = require('telescope.builtin')
-      end
-    end
+    --    config = function()
+    --      local status, _ = pcall(require, 'telescope')
+    --      if status then
+    --        local map = vim.keymap.set
+    --        local telescope = require('telescope.builtin')
+    --      end
+    --    end
   }
 end

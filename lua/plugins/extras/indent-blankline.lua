@@ -1,17 +1,20 @@
 if not vim.g.vscode then
   return {
     'lukas-reineke/indent-blankline.nvim',
+    main = "ibl",
+    opts = {
+      space_char_blankline = " ",
+      show_current_context = true,
+    },
     config = function()
-      vim.api.nvim_set_option('cursorline', true)
-      vim.opt.list = true
-      vim.opt.listchars:append "space: "
-      vim.opt.listchars:append "eol: "
-      local cmd = vim.cmd
-      cmd [[highlight IndentBlanklineContextChar guifg=#6e738d gui=nocombine]]
-      require("indent_blankline").setup {
-        space_char_blankline = " ",
-        show_current_context = true,
-      }
+      require("ibl").setup(
+        {
+          scope = {
+            show_start = false,
+          }
+
+        }
+      )
     end
   }
 end

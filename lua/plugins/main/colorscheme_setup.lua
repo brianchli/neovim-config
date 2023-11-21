@@ -1,5 +1,4 @@
 return {
-  --   COLORSCHEMES
   {
     'catppuccin/nvim',
     name = 'catppuccin',
@@ -17,11 +16,12 @@ return {
           nvimtree = true,
           telescope = true,
           notify = false,
-        }
+        },
       })
+
       local cmd = vim.cmd
       vim.o.termguicolors = true
-      cmd 'colorscheme catppuccin'
+      cmd.colorscheme 'catppuccin'
       local macchiato = require("catppuccin.palettes").get_palette "macchiato"
       -- setting the outlines for highlighting the current line
       vim.api.nvim_set_hl(

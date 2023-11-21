@@ -33,13 +33,14 @@ api.nvim_create_autocmd("FileType", {
     'typescript',
     'javascriptreact',
     'typescriptreact',
-    'lua',
-    'zsh',
-    'sh',
-    'c',
     'cpp',
+    'c',
+    'sh',
+    'zsh',
+    'lua',
     'css',
-    'html' },
+    'html'
+  },
   callback = function()
     vim.bo.shiftwidth = 2
     vim.bo.softtabstop = 2
@@ -77,8 +78,6 @@ api.nvim_create_autocmd("CursorHold", {
       focusable = false,
       close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
       style = 'minimal',
-      --      border = 'single',
-
       source = 'always',
       max_width = 100,
       title = 'test',
@@ -123,7 +122,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- wrap and check for spell in text filetypes
+-- wrap and check for spelling in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("wrap_spell"),
   pattern = { "gitcommit", "markdown" },
