@@ -8,6 +8,7 @@ local map = vim.keymap.set
 --    command: the command you want the keypresses to execute.
 --    options: an optional Lua table of options to configure (e.g., silent or noremap).
 
+-- Easy access to Lazy
 map("n", "<Leader>L", ":Lazy<CR>", { noremap = true })
 
 -- Buffer navigation
@@ -32,3 +33,7 @@ map("n", "<leader>y", "\"+y", { noremap = true }) -- yank into universal clipboa
 -- better indenting
 map("v", "<", "<gv", { noremap = true })
 map("v", ">", ">gv", { noremap = true })
+
+-- Misc
+-- Copy all
+map("n", "<C-c>", "gg<S-v>G")
