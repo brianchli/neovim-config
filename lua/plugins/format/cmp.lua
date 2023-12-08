@@ -12,6 +12,7 @@ if not vim.g.vscode then
       'rafamadriz/friendly-snippets',
       'onsails/lspkind-nvim',
       'p00f/clangd_extensions.nvim',
+      'windwp/nvim-autopairs',
     },
     event = {
       event = "InsertEnter",
@@ -21,6 +22,12 @@ if not vim.g.vscode then
       local ls = require("luasnip")
       local lspkind = require('lspkind')
       local status, cmp = pcall(require, 'cmp')
+
+      local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+      cmp.event:on(
+        'confirm_done',
+        cmp_autopairs.on_confirm_done()
+      )
 
       -- sets the colors for the autocompletion list options
 
