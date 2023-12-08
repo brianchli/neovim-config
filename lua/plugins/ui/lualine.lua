@@ -75,8 +75,8 @@ if not vim.g.vscode then
           },
         }
 
-        local ll_y = {
-        }
+        local ll_y = { 'encoding' }
+
         ll.setup {
           options = options,
           sections = {
@@ -113,11 +113,7 @@ if not vim.g.vscode then
             },
             lualine_x = ll_x,
             lualine_y = ll_y,
-            lualine_z = {
-              function()
-                return " " .. os.date("%R")
-              end,
-            },
+            lualine_z = { 'location' },
           },
         }
       end
