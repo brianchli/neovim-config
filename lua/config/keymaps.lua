@@ -12,9 +12,7 @@ local map = vim.keymap.set
 map("n", "<Leader>L", ":Lazy<CR>", { noremap = true })
 
 -- Buffer navigation
-map("n", "<Leader>h", ":bn<CR>", { noremap = true }) -- move to right buffer
-map("n", "<Leader>l", ":bp<CR>", { noremap = true }) -- move to left buffer
-map("n", "<Leader>q", ":bd<CR>", { noremap = true }) -- remove current buffer
+map("n", "<Leader>q", ":bdelete<CR>", { noremap = true }) -- remove current buffer
 
 -- vim key remappings
 map("n", "<leader>w", ":w<CR>", { noremap = true })     -- write file

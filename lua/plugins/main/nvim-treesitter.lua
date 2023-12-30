@@ -20,6 +20,7 @@ if not vim.g.vscode then
             "typescript",
             "toml",
             "rust",
+            "zig"
           },
           highlight = { enable = true },
           indent = { enable = true },

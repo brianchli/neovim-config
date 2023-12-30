@@ -1,5 +1,5 @@
 [tool.ruff]
-line-length = 88
+line-length = 80
 
 # Enable Pyflakes `E` and `F` codes by default.
 select = [
@@ -82,6 +82,9 @@ max-complexity = 10
 [tool.isort]
 lines_before_imports = 1
 lines_after_imports = 1
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
 
 #add_imports = [ 
 #    "import os", 

@@ -1,14 +1,16 @@
 if not vim.g.vscode then
   return {
     'neovim/nvim-lspconfig',
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       'hrsh7th/nvim-cmp',
       'hrsh7th/cmp-nvim-lsp',
       'simrat39/rust-tools.nvim',
       'p00f/clangd_extensions.nvim',
       'SmiteshP/nvim-navic',
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
     },
-    event = { "BufReadPre", "BufNewFile" },
     priority = 950,
     config = function()
       local status, lspconfig = pcall(require, 'lspconfig')
@@ -24,6 +26,7 @@ if not vim.g.vscode then
           debounce_text_changes = 150,
           allow_incremental_sync = true,
         }
+
         local opts = { noremap = true, silent = true }
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
@@ -70,6 +73,12 @@ if not vim.g.vscode then
           }
         }
 
+        lspconfig['pylsp'].setup({
+          on_attach = on_attach,
+          capabilities = lsp_capabilities,
+          settings = py_settings
+        })
+
         local lua_settings = {
           Lua = {
             diagnostics = {
@@ -77,12 +86,6 @@ if not vim.g.vscode then
             }
           }
         }
-
-        lspconfig['pylsp'].setup({
-          on_attach = on_attach,
-          capabilities = lsp_capabilities,
-          settings = py_settings
-        })
 
         lspconfig['lua_ls'].setup({
           on_attach = on_attach,
@@ -103,6 +106,7 @@ if not vim.g.vscode then
           capabilities = lsp_capabilities,
           init_options = ruff_settings,
         })
+
         -- enhanced capabilities for c and rust
         -- local c_capabilities = lsp_capabilities
         --c_capabilities.offsetEncoding = 'utf-16'

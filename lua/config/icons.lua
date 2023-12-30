@@ -1,4 +1,3 @@
--- currently not in use
 return {
   dap = {
     Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },

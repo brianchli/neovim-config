@@ -23,6 +23,13 @@ if not vim.g.vscode then
         { import = 'plugins.navigate' },
         { import = 'plugins.extras' },
         { import = 'plugins.diagnostics' },
+      },
+      checker = {
+        enabled = true,
+        notify = false,
+      },
+      change_detection = {
+        notify = false
       }
     })
   end
