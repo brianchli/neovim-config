@@ -6,18 +6,10 @@ return {
   },
   config = function()
     require("nvim-tree").setup({
-      on_attach = function(bufnr)
-        local function opts(desc)
-          return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-        end
-        local ok, api = pcall(require, "nvim-tree.api")
-        assert(ok, "api module is not found")
-        vim.keymap.set("n", "<CR>", api.node.open.tab_drop, opts("Tab drop"))
-      end,
       auto_reload_on_write = true,
       sort_by = "name",
       diagnostics = {
-        enable = true,
+        enable = false,
         show_on_dirs = false,
         show_on_open_dirs = true,
         debounce_delay = 50,
@@ -51,7 +43,6 @@ return {
         signcolumn = "yes",
       },
       renderer = {
-
         special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
         symlink_destination = true,
         add_trailing = true,
