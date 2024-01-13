@@ -86,6 +86,13 @@ if not vim.g.vscode then
               end
             end, { 'i', 's' }),
           }),
+          matching = {
+            disallow_partial_fuzzy_matching = false,
+          },
+          window = {
+            completion = cmp.config.window.bordered(),
+            documentation = cmp.config.window.bordered(),
+          },
           formatting = {
             format = lspkind.cmp_format {
               default = true,
@@ -103,6 +110,22 @@ if not vim.g.vscode then
               hl_group = "LspCodeLens",
             }
           },
+        })
+        -- `/` cmdline setup.
+        cmp.setup.cmdline('/', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = {
+            { name = 'buffer' }
+          }
+        })
+        -- `:` cmdline setup.
+        cmp.setup.cmdline(':', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = 'path' }
+          }, {
+            { name = 'cmdline' }
+          })
         })
         require("luasnip.loaders.from_vscode").lazy_load()
       end
