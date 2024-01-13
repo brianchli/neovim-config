@@ -16,17 +16,19 @@ return {
       )
       -- REQUIRED
 
-      vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end)
-      vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-
-      vim.keymap.set("n", "<leader>h1", function() harpoon:list():select(1) end)
-      vim.keymap.set("n", "<leader>h2", function() harpoon:list():select(2) end)
-      vim.keymap.set("n", "<leader>h3", function() harpoon:list():select(3) end)
-      vim.keymap.set("n", "<leader>h4", function() harpoon:list():select(4) end)
+      vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end, { desc = "append to harpoon list" })
+      vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
+        { desc = "open harpoon list" })
+      vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "open harpoon list item 1" })
+      vim.keymap.set("n", "<leader>2", function() harpoon:list():select(2) end, { desc = "open harpoon list item 2" })
+      vim.keymap.set("n", "<leader>3", function() harpoon:list():select(3) end, { desc = "open harpoon list item 3" })
+      vim.keymap.set("n", "<leader>4", function() harpoon:list():select(4) end, { desc = "open harpoon list item 4" })
 
       -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set("n", "<leader>hj", function() harpoon:list():prev() end)
-      vim.keymap.set("n", "<leader>hk", function() harpoon:list():next() end)
+      vim.keymap.set("n", "<leader>j", function() harpoon:list():prev() end,
+        { desc = "toggle to prev saved harpoon buffer " })
+      vim.keymap.set("n", "<leader>k", function() harpoon:list():next() end,
+        { desc = "toggle to next saved harpoon buffer" })
 
       local conf = require("telescope.config").values
       local function toggle_telescope(harpoon_files)
@@ -45,7 +47,7 @@ return {
         }):find()
       end
       vim.keymap.set("n", "<leader>fl", function() toggle_telescope(harpoon:list()) end,
-        { desc = "Open harpoon window" })
+        { desc = "open harpoon window" })
     end,
     dependencies = { "nvim-lua/plenary.nvim" },
   }
