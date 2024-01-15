@@ -58,45 +58,6 @@ api.nvim_create_autocmd("BufWritePre", {
   end,
 })
 
-api.nvim_create_autocmd({ "QuitPre", "ExitPre", "BufDelete" }, {
-  group = augroup('nvim_auto_close'),
-  desc = 'auto close nvim tree for specified file types',
-  callback = function()
-    -- auto close nvim ide
-    if pcall(require, 'ide') then
-      local ws = require('ide.workspaces.workspace_registry').get_workspace(vim.api.nvim_get_current_tabpage())
-      if ws ~= nil then
-        ws.close_panel(require('ide.panels.panel').PANEL_POS_BOTTOM)
-        ws.close_panel(require('ide.panels.panel').PANEL_POS_LEFT)
-        ws.close_panel(require('ide.panels.panel').PANEL_POS_RIGHT)
-      end
-    end
-    -- Get all non-hidden, non-empty buffers in Neovim using Lua
-    local status, nvim_tree = pcall(require, 'nvim-tree.api')
-    if not status then
-      return
-    end
-    -- hacky solution
-    if status and nvim_tree.tree.is_visible() then
-      local res, _ = pcall(nvim_tree.tree.toggle, { current_window = true, focus = false })
-      if not res then
-        vim.cmd("bdelete")
-      end
-    end
-  end,
-})
-
-api.nvim_create_autocmd({ "VimEnter" }, {
-  group = augroup('nvim_auto_open'),
-  desc = "auto open nvim tree upon opening Neovim",
-  callback = function()
-    local status, nvim_tree = pcall(require, 'nvim-tree.api')
-    if status then
-      nvim_tree.tree.toggle({ focus = false })
-    end
-  end,
-})
-
 -- display diagnostics as hovers
 api.nvim_create_autocmd("CursorHold", {
   group = augroup('diagnostic_hover'),
@@ -147,7 +108,7 @@ vim.api.nvim_create_autocmd("FileType", {
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true })
+    vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, desc = "close with q" })
   end,
 })
 

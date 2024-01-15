@@ -2,7 +2,7 @@ if not vim.g.vscode then
   return {
     "folke/zen-mode.nvim",
     keys = {
-      { "<leader>tz", "<cmd>ZenMode<cr>", desc = "Toggle zen mode" },
+      { "<leader>tz", "<cmd>ZenMode<cr>", desc = "toggle zen mode" },
     },
     opts = {
       -- your configuration comes here

@@ -5,7 +5,7 @@ if not vim.g.vscode then
     cmd = { "TroubleToggle", "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "Toggle trouble" },
+      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "toggle trouble" },
     },
     priority = 750,
     config = function()
@@ -47,7 +47,7 @@ if not vim.g.vscode then
             auto_close = true,
           }
         )
-        -- autoclose on buffer exits
+        -- auto close on buffer exits
         local autoclose = vim.api.nvim_create_augroup('autoclose', { clear = true })
         vim.api.nvim_clear_autocmds({
           buffer = vim.api.nvim_get_current_buf(),

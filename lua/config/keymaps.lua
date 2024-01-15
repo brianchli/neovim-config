@@ -9,24 +9,22 @@ local map = vim.keymap.set
 --    options: an optional Lua table of options to configure (e.g., silent or noremap).
 
 -- Easy access to Lazy
-map("n", "<Leader>L", ":Lazy<CR>", { noremap = true })
+map("n", "<Leader>L", ":Lazy<CR>", { desc = "open lazy", noremap = true })
 
 -- Buffer navigation
-map("n", "<Leader>q", ":bdelete<CR>", { noremap = true }) -- remove current buffer
+map("n", "<Leader>q", ":bdelete<CR>", { desc = "quit buffer", noremap = true }) -- remove current buffer
 
 -- vim key remappings
-map("n", "<leader>w", ":w<CR>", { noremap = true })     -- write file
-map("v", "<leader>ii", ":norm i", { noremap = true })   -- insert
-map("n", "<Leader>ch", ":nohl<CR>", { noremap = true }) -- clear highlights
+map("n", "<leader>w", ":w<CR>", { desc = "save buffer", noremap = true })            -- write file
+map("v", "<leader>ii", ":norm i", { desc = "fast insert", noremap = true })          -- insert
+map("n", "<Leader>ch", ":nohl<CR>", { desc = "clear highlighting", noremap = true }) -- clear highlights
 
 -- format file
 map("n", "<leader>fa", ":lua vim.lsp.buf.format{async=true}<CR>", { noremap = true })
-map("n", "<C-u>", "<C-u>zz", { noremap = true })  -- half page scroll up
-map("n", "<C-d>", "<C-d>zz", { noremap = true })  -- half page scroll down
-map("v", "<leader>rc", ":s/", { noremap = true }) -- find and replace
-map("n", "<leader>y", "\"+y", { noremap = true }) -- yank into clipboard normal mode
-map("v", "<leader>y", "\"+y", { noremap = true }) -- yank into clipboard visual mode
-map("n", "<leader>y", "\"+y", { noremap = true }) -- yank into universal clipboard
+map("n", "<C-u>", "<C-u>zz", { noremap = true })                                         -- half page scroll up
+map("n", "<C-d>", "<C-d>zz", { noremap = true })                                         -- half page scroll down
+map("n", "<leader>y", "\"+y", { desc = "yank into clipboard (normal)", noremap = true }) -- yank into clipboard normal mode
+map("v", "<leader>y", "\"+y", { desc = "yank into clipboard (visual)", noremap = true }) -- yank into clipboard visual mode
 
 -- better indenting
 map("v", "<", "<gv", { noremap = true })
@@ -34,4 +32,4 @@ map("v", ">", ">gv", { noremap = true })
 
 -- Misc
 -- Copy all
-map("n", "<C-c>", "gg<S-v>G")
+map("n", "<C-y>", "gg<S-v>G")

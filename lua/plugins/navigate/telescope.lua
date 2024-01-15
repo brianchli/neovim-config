@@ -2,16 +2,15 @@ if not vim.g.vscode then
   return {
     {
       'nvim-telescope/telescope.nvim',
-      tag = '0.1.4',
-      dependencies = { 'nvim-lua/plenary.nvim' },
+      dependencies = { 'nvim-lua/plenary.nvim', },
       priority = 900,
       keys = {
-        { "<leader>ff", "<cmd>Telescope find_files<cr>",  desc = "Find files" },
-        { "<leader>fm", "<cmd>Telescope man_pages<cr>",   desc = "Man Pages" },
-        { "<leader>fc", "<cmd>Telescope commands<cr>",    desc = "Commands" },
-        { "<leader>fh", "<cmd>Telescope help_tags<cr>",   desc = "Help tags" },
-        { "<leader>fb", "<cmd>Telescope buffers<cr>",     desc = "Buffers" },
-        { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "Options" },
+        { "<leader>ff", "<cmd>Telescope find_files<cr>",  desc = "find files" },
+        { "<leader>fm", "<cmd>Telescope man_pages<cr>",   desc = "find man page" },
+        { "<leader>fc", "<cmd>Telescope commands<cr>",    desc = "find command" },
+        { "<leader>fh", "<cmd>Telescope help_tags<cr>",   desc = "find help tags" },
+        { "<leader>fb", "<cmd>Telescope buffers<cr>",     desc = "find fuffers" },
+        { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "find options" },
       },
     },
     {

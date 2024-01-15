@@ -3,6 +3,7 @@ if not vim.g.vscode then
   return {
     'nvim-treesitter/nvim-treesitter',
     priority = 980,
+    build = ":TSUpdate",
     config = function()
       require('nvim-treesitter.configs').setup(
         {

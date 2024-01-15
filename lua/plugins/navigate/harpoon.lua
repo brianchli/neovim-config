@@ -47,7 +47,7 @@ return {
         }):find()
       end
       vim.keymap.set("n", "<leader>fl", function() toggle_telescope(harpoon:list()) end,
-        { desc = "open harpoon window" })
+        { desc = "fzf search harpoon buffers" })
     end,
     dependencies = { "nvim-lua/plenary.nvim" },
   }

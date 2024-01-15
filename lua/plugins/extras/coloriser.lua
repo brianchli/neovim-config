@@ -2,7 +2,7 @@ if not vim.g.vscode then
   return {
     'norcalli/nvim-colorizer.lua',
     keys = {
-      { "<leader>cs", "<cmd>ColorizerToggle<cr>", desc = "Toggle coloriser" },
+      { "<leader>cs", "<cmd>ColorizerToggle<cr>", desc = "colorise hex codes" },
     },
     priority = 200,
     config = function()

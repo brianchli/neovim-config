@@ -7,20 +7,19 @@ return {
     local wk = require("which-key")
     wk.register({
       f = {
-        name = "find",            -- optional group name
-        a = { "Format File" },    -- create a binding with label
-        f = { "Find File" },      -- create a binding with label
-        h = { "Search Help" },    -- just a label. don't create any mapping
-        b = { "Search buffers" }, -- just a label. don't create any mapping
+        name = "find", -- optional group name
       },
       t = {
         name = "git", -- optional group name
       },
+      h = {
+        name = "harpoon"
+      },
       c = {
         name = "code",
-        a = { "Code highlights" },
-        h = { "disable search highlights" },
-        b = { "search buffers" },
+        a = "code highlights",
+        h = "disable search highlights",
+        b = "search buffers",
       },
       y = {
         name = "yank to clipboard",
