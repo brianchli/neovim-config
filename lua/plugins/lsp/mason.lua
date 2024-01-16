@@ -50,7 +50,12 @@ if not vim.g.vscode then
         'williamboman/mason.nvim',
       },
       config = function()
-        require("mason-nvim-dap").setup()
+        require("mason-nvim-dap").setup(
+          {
+            handlers = {},
+            ensure_installed = { "python", "codelldb" },
+          }
+        )
       end
     }
   }
