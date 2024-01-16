@@ -26,6 +26,34 @@ if not vim.g.vscode then
         local _ = require('telescope')
         local actions = require('telescope.actions')
         require("telescope").setup({
+          defaults = {
+            prompt_prefix = " " .. require('config.icons').dap.Stopped[1],
+            mappings = {
+              i = {
+                ["<esc>"] = actions.close
+              },
+            },
+            path_display = { truncate = 3 }
+          },
+          pickers = {
+            commands = {
+              layout_strategy = "center",
+              layout_config = { width = 0.80 }
+            },
+            man_pages = {
+              previewer = false,
+              layout_strategy = "center",
+            },
+            help_tags = {
+              previewer = false,
+              layout_strategy = "center",
+            },
+            vim_options = {
+              layout_strategy = "center",
+              layout_config = { width = 0.80 }
+            }
+
+          },
           extensions = {
             ["ui-select"] = {
               require('telescope.themes').get_dropdown {}
