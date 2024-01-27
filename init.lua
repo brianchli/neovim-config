@@ -1,10 +1,11 @@
--- init.lua
-
--- default setup
 if not vim.g.vscode then
-  -- LEADER
-  -- These keybindings need to be defined before the first /
-  -- is called; otherwise, it will default to "\"
+  --╭──────────────────────────────────────────────────────────╮
+  --│ *LEADER*                                                 │
+  --│ These keybindings need to be defined before the first /  │
+  --│ is called; otherwise, it will default to "\"             │
+  --│                                                          │
+  --╰──────────────────────────────────────────────────────────╯
+
   local cmd = vim.cmd
   vim.g.mapleader = ' '
   vim.g.localleader = '\\'
@@ -15,8 +16,8 @@ if not vim.g.vscode then
   cmd "sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo"
   cmd "sign define DiagnosticSignHint text=● texthl=DiagnosticSignHint"
 
-  require('config.opts')      -- Options
-  require('config.keymaps')   -- Keymapping
-  require('config.autofuncs') -- functions and autocmds
-  require('config.setup')
+  require('config.opts')      -- options
+  require('config.keymaps')   -- key mappings
+  require('config.autofuncs') -- functions and autocommands
+  require('config.setup')     -- plugins
 end
