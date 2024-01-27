@@ -1,18 +1,16 @@
 [tool.ruff]
-line-length = 80
+line-length = 88
 
 # Enable Pyflakes `E` and `F` codes by default.
 select = [
     "E",        # pyflake
     "F", "W",   # pycodestyle
-    #"D",        # pydocstyle
     "ICN",      # pyflakes; import convention 
     "COM",      # flake8; commas
     "A",        # flake8; builtins 
     "C4",       # flake8; comprehensions 
     "B",        # flake8; bugbear
     "PT",       # flake8; pytest style
-    #"I",        # isort
     "N",        # pep8 - naming
     "SIM",      # pep8 - simplify
     "ARG"       # pep8 - unused arguments
@@ -28,6 +26,7 @@ ignore = [
     "E999",
     "D103",
     "E402", # module level import not at top of file
+    "COM812" # missing trailing comma
 ]
 
 # Never try to fix `F401` (unused imports).
@@ -85,11 +84,3 @@ lines_after_imports = 1
 
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
-
-#add_imports = [ 
-#    "import os", 
-#    "import sys", 
-#    "import json", 
-#    "import subprocess" 
-#]
-#
