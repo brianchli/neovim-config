@@ -147,8 +147,8 @@ if not vim.g.vscode then
             program = function()
               local abs_dir = vim.fn.getcwd()
               local current_dir = abs_dir:match('.*[/](.*)')
-              if current_dir == 'src' then
-                vim.notify("cannot be in src directory")
+              if current_dir == 'src' or current_dir == 'build' then
+                vim.notify("cannot be in the " .. current_dir .. " directory")
                 return nil
               end
               local filename = vim.fn.expand('%'):match("(.+)[.].*$")
@@ -156,7 +156,6 @@ if not vim.g.vscode then
               if filename == nil then
                 return nil
               end
-              local extension = vim.fn.expand('%'):match(".+[.](.*)$")
               if io.open(vim.fn.getcwd() .. '/a.out') ~= nil then
                 return vim.fn.getcwd() .. '/a.out'
               end
@@ -171,7 +170,7 @@ if not vim.g.vscode then
               if io.open(vim.fn.getcwd() .. '/build/main') ~= nil then
                 return vim.fn.getcwd() .. '/build/main'
               end
-              return vim.fn.input('Executable(' .. extension .. '):', './', 'file')
+              return vim.fn.input(vim.fn.getcwd() .. '/')
             end,
             cwd = '${workspaceFolder}',
             stopOnEntry = false,
