@@ -1,4 +1,9 @@
--- vim autocommands
+--
+--╭──────────────────────────────────────────────────────────╮
+--│ Autocommands                                             │
+--│                                                          │
+--╰──────────────────────────────────────────────────────────╯
+--
 
 local api = vim.api
 local bufnr = api.nvim_get_current_buf()
@@ -8,6 +13,7 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("lazy_augroup_" .. name, { clear = true })
 end
 
+-- keep tabs as tabs for certain files
 api.nvim_create_autocmd({ "BufEnter", "BufNew" }, {
   group = augroup('makefile'),
   desc = "Remove tab expansion during makefile editing",
@@ -17,6 +23,7 @@ api.nvim_create_autocmd({ "BufEnter", "BufNew" }, {
   end
 })
 
+-- just highlight on yank..
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
   callback = function()
@@ -48,7 +55,7 @@ api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Auto format specified buffers on write
+-- auto format specified buffers on write
 api.nvim_create_autocmd("BufWritePre", {
   group = augroup('autoformat'),
   -- removed lua and html formatting
