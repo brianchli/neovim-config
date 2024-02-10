@@ -115,12 +115,54 @@ vim.api.nvim_create_autocmd("FileType", {
 -- wrap and check for spelling in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
   group = augroup("wrap_spell"),
-  pattern = { "gitcommit", "markdown" },
+  pattern = { "gitcommit", "markdown, text" },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
   end,
 })
+
+-- remove spellcheck in certain filetypes
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("no_spell"),
+  pattern = { "help", "man", "checkhealth" },
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
+
+-- auto clean tex compilation files
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  pattern = "*.tex",
+  group = augroup("auto_clean_tex"),
+  callback = function()
+    vim.cmd("VimtexStop")
+    vim.cmd("VimtexClean")
+  end,
+})
+
+-- add vimtex commands on enter to *.tex files
+vim.api.nvim_create_autocmd("VimEnter", {
+  pattern = "*.tex",
+  group = augroup("add_vimtex_commands"),
+  callback = function()
+    vim.keymap.set('n', '<leader>l<Space>', "<cmd>VimtexCompile<cr>",
+      { noremap = true, silent = true, desc = "start continous latex compilation" })
+    vim.keymap.set('n', '<leader>l<Enter>', "<cmd>VimtexCompileSS<cr>",
+      { noremap = true, silent = true, desc = "compile latex document snapshot" })
+    vim.keymap.set('n', '<leader>ls', "<cmd>VimtexStop<cr>",
+      { noremap = true, silent = true, desc = "stop latex document compilation" })
+    vim.keymap.set('n', '<leader>ll', "<cmd>VimtexLog<cr>",
+      { noremap = true, silent = true, desc = "display latex compilation logs" })
+    vim.keymap.set('n', '<leader>li', "<cmd>VimtexInfo<cr>",
+      { noremap = true, silent = true, desc = "display Vimtex instance information" })
+    vim.keymap.set('n', '<leader>lc', "<cmd>VimtexClear<cr>",
+      { noremap = true, silent = true, desc = "clear Vimtex generated files" })
+    vim.keymap.set('n', '<leader>lr', "<cmd>VimtexReload<cr>",
+      { noremap = true, silent = true, desc = "reload Vimtex plugin" })
+  end,
+})
+
 
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
