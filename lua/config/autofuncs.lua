@@ -58,8 +58,8 @@ api.nvim_create_autocmd("FileType", {
 -- auto format specified buffers on write
 api.nvim_create_autocmd("BufWritePre", {
   group = augroup('autoformat'),
-  -- removed lua and html formatting
-  pattern = { '*.jsx', '*.py', '*.c', '*.rs', '*.cpp' },
+  -- removed lua, html and c (due to OS) formatting
+  pattern = { '*.jsx', '*.py', '*.rs', '*.cpp' },
   callback = function()
     vim.lsp.buf.format(nil, 200)
   end,
