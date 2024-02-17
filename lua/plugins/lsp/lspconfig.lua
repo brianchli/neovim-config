@@ -150,6 +150,9 @@ if not vim.g.vscode then
           'yamlls',
           'astro',
           'clangd',
+          'jsonls',
+          'zls',
+          'texlab',
         }
         for _, lsp in ipairs(servers) do
           if lsp == 'emmet_ls' then

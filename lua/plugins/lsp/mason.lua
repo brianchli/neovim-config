@@ -38,7 +38,8 @@ if not vim.g.vscode then
           "emmet_ls",
           "lua_ls",
           "zls",
-          "texlab"
+          "texlab",
+          "jsonls"
         },
         automatic_installation = true,
       }
