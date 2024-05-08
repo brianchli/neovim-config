@@ -9,8 +9,12 @@ if not vim.g.vscode then
         { "<leader>fm", "<cmd>Telescope man_pages<cr>",   desc = "find man page" },
         { "<leader>fc", "<cmd>Telescope commands<cr>",    desc = "find command" },
         { "<leader>fh", "<cmd>Telescope help_tags<cr>",   desc = "find help tags" },
-        { "<leader>fb", "<cmd>Telescope buffers<cr>",     desc = "find fuffers" },
+        { "<leader>fb", "<cmd>Telescope buffers<cr>",     desc = "find buffers" },
         { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "find options" },
+        { "<leader>fg", "<cmd>Telescope git_commits<cr>", desc = "find commits" },
+        { "<leader>fG", "<cmd>Telescope git_bcommits<cr>", desc = "find commits with diff in current buffer" },
+        { "<leader>f?", "<cmd>Telescope builtin<cr>", desc = "find telescope builtins" },
+        { "<leader>fs", "<cmd>Telescope live_grep<cr>", desc = "find substring" },
       },
     },
     {
