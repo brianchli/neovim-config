@@ -189,6 +189,7 @@ if not vim.g.vscode then
     {
       'rcarriga/nvim-dap-ui',
       dependencies = {
+        "nvim-neotest/nvim-nio",
         "mfussenegger/nvim-dap",
         "folke/neodev.nvim",
         'theHamsta/nvim-dap-virtual-text',
