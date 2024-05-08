@@ -38,11 +38,14 @@ if not vim.g.vscode then
 
           -- Mappings.
           -- See `:help vim.lsp.*` for documentation on any of the below functions
+          --
+          vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references,
+            { noremap = true, silent = true, buffer = bufnr, desc = "goto references" })
+          vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions,
+            { noremap = true, silent = true, buffer = bufnr, desc = "goto definition" })
           vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
             { noremap = true, silent = true, buffer = bufnr, desc = "goto declaration" })
-          vim.keymap.set('n', 'gd', vim.lsp.buf.definition,
-            { noremap = true, silent = true, buffer = bufnr, desc = "goto definition" })
-          vim.keymap.set('n', 'gi', vim.lsp.buf.implementation,
+          vim.keymap.set('n', 'gI', require('telescope.builtin').lsp_implementations,
             { noremap = true, silent = true, buffer = bufnr, desc = "goto implementation" })
           vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,
             { noremap = true, silent = true, buffer = bufnr, desc = "signature help" })
@@ -57,6 +60,10 @@ if not vim.g.vscode then
 
           vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
             { noremap = true, silent = true, buffer = bufnr, desc = "buf type definition" })
+          vim.keymap.set('n', '<space>d', require('telescope.builtin').lsp_document_symbols,
+            { noremap = true, silent = true, buffer = bufnr, desc = "buf document symbols" })
+          vim.keymap.set('n', '<space>ds', require('telescope.builtin').lsp_dynamic_workspace_symbols,
+            { noremap = true, silent = true, buffer = bufnr, desc = "buf document symbols" })
           vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename,
             { noremap = true, silent = true, buffer = bufnr, desc = "buf rename" })
           vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action,
@@ -68,8 +75,10 @@ if not vim.g.vscode then
             navic.attach(client, bufnr)
           end
 
-          require("clangd_extensions.inlay_hints").setup_autocmd()
-          require("clangd_extensions.inlay_hints").set_inlay_hints()
+          if vim.bo.filetype == "cpp" then
+            require("clangd_extensions.inlay_hints").setup_autocmd()
+            require("clangd_extensions.inlay_hints").set_inlay_hints()
+          end
         end
 
         local py_settings = {
@@ -154,6 +163,7 @@ if not vim.g.vscode then
           'zls',
           'texlab',
         }
+
         for _, lsp in ipairs(servers) do
           if lsp == 'emmet_ls' then
             lspconfig[lsp].setup({
