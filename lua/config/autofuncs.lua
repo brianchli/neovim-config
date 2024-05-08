@@ -9,7 +9,7 @@ local api = vim.api
 local bufnr = api.nvim_get_current_buf()
 
 -- utility function for creating augroups
-local function augroup(name)
+function augroup(name)
   return vim.api.nvim_create_augroup("lazy_augroup_" .. name, { clear = true })
 end
 
@@ -55,15 +55,17 @@ api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- auto format specified buffers on write
-api.nvim_create_autocmd("BufWritePre", {
-  group = augroup('autoformat'),
-  -- removed lua, html and c (due to OS) formatting
-  pattern = { '*.jsx', '*.py', '*.rs', '*.cpp' },
-  callback = function()
-    vim.lsp.buf.format(nil, 200)
-  end,
-})
+--
+---- auto format specified buffers on write
+--api.nvim_create_autocmd("BufWritePre", {
+--  group = augroup('autoformat'),
+--  -- removed lua, html and c (due to OS) formatting
+--  pattern = { '*.jsx', '*.py', '*.rs', '*.cpp' },
+--  callback = function()
+--    vim.lsp.buf.format(nil, 200)
+--  end,
+--})
+--
 
 -- display diagnostics as hovers
 api.nvim_create_autocmd("CursorHold", {
@@ -167,9 +169,9 @@ vim.api.nvim_create_autocmd("VimEnter", {
       { noremap = true, silent = true, desc = "clear Vimtex generated files" })
     vim.keymap.set('n', '<leader>lr', "<cmd>VimtexReload<cr>",
       { noremap = true, silent = true, desc = "reload Vimtex plugin" })
+    vim.cmd("VimtexCompile")
   end,
 })
-
 
 -- Check if we need to reload the file when it changed
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
