@@ -16,7 +16,7 @@ return {
       )
       -- REQUIRED
 
-      vim.keymap.set("n", "<leader>ha", function() harpoon:list():append() end, { desc = "append to harpoon list" })
+      vim.keymap.set("n", "<leader>ha", function() harpoon:list():add() end, { desc = "append to harpoon list" })
       vim.keymap.set("n", "<leader>hl", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end,
         { desc = "open harpoon list" })
       vim.keymap.set("n", "<leader>1", function() harpoon:list():select(1) end, { desc = "open harpoon list item 1" })
