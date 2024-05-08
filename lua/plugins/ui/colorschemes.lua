@@ -4,4 +4,7 @@ return {
   { 'drewtempelmeyer/palenight.vim', name = 'pale',     lazy = false },
   { 'rebelot/kanagawa.nvim',         name = 'kanagawa', lazy = false },
   { 'bluz71/vim-nightfly-colors',    name = 'nightfly', lazy = false },
+  { 'olivercederborg/poimandres.nvim', name = 'poimandres', lazy = false },
+  { 'Mofiqul/vscode.nvim', name = 'vscode', lazy = false },
+  { 'navarasu/onedark.nvim', name = 'onedark', lazy = false },
 }
