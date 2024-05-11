@@ -21,7 +21,8 @@ if not vim.g.vscode then
             "typescript",
             "toml",
             "rust",
-            "zig"
+            "zig",
+            "haskell"
           },
           highlight = { enable = true },
           indent = { enable = true },
