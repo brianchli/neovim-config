@@ -10,6 +10,11 @@ if not vim.g.vscode then
       'SmiteshP/nvim-navic',
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
+      {
+        'mrcjkb/haskell-tools.nvim',
+        version = '^3', -- Recommended
+        lazy = false,   -- This plugin is already lazy
+      }
     },
     priority = 950,
     config = function()
@@ -31,6 +36,8 @@ if not vim.g.vscode then
         vim.keymap.set('n', ']d', vim.diagnostic.goto_next,
           { noremap = true, silent = true, desc = "goto prev diagnostic" })
 
+        local ht = require('haskell-tools')
+        -- ~/.config/nvim/after/ftplugin/haskell.lua
         local on_attach = function(client, bufnr)
           -- Enable completion triggered by <c-x><c-o>
           -- NOTE: Not sure if this is required? Test how it is without it for now.
@@ -78,6 +85,23 @@ if not vim.g.vscode then
           if vim.bo.filetype == "cpp" then
             require("clangd_extensions.inlay_hints").setup_autocmd()
             require("clangd_extensions.inlay_hints").set_inlay_hints()
+          end
+          if vim.bo.filetype == "hs" then
+            local opts = { noremap = true, silent = true, buffer = bufnr, }
+            -- haskell-language-server relies heavily on codeLenses,
+            -- so auto-refresh (see advanced configuration) is enabled by default
+            vim.keymap.set('n', '<space>cl', vim.lsp.codelens.run, opts)
+            -- Hoogle search for the type signature of the definition under the cursor
+            vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, opts)
+            -- Evaluate all code snippets
+            vim.keymap.set('n', '<space>ea', ht.lsp.buf_eval_all, opts)
+            -- Toggle a GHCi repl for the current package
+            vim.keymap.set('n', '<leader>rr', ht.repl.toggle, opts)
+            -- Toggle a GHCi repl for the current buffer
+            vim.keymap.set('n', '<leader>rf', function()
+              ht.repl.toggle(vim.api.nvim_buf_get_name(0))
+            end, opts)
+            vim.keymap.set('n', '<leader>rq', ht.repl.quit, opts)
           end
         end
 

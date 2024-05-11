@@ -27,6 +27,7 @@ if not vim.g.vscode then
       opts = {
         ensure_installed = {
           "ruff_lsp",
+          "ruff",
           "sqlls",
           "yamlls",
           "cmake",
@@ -39,7 +40,8 @@ if not vim.g.vscode then
           "lua_ls",
           "zls",
           "texlab",
-          "jsonls"
+          "jsonls",
+          "hls"
         },
         automatic_installation = true,
       }
