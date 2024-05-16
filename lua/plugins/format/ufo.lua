@@ -19,10 +19,13 @@ if not vim.g.vscode then
         end
       }
     },
-    event = "BufReadPost",
+    priority = 900,
     opts = {
-      open_fold_hl_timeout = 400,
-      close_fold_kinds = { "imports", "comment" },
+      close_fold_kinds_for_ft = {
+        default = { 'imports', 'comment' },
+        json = { 'array' },
+        c = { 'comment' }
+      },
       preview = {
         win_config = {
           border = { "", "─", "", "", "", "─", "", "" },
@@ -37,7 +40,7 @@ if not vim.g.vscode then
         },
       },
     },
-    init = function ()
+    init = function()
       vim.o.foldcolumn = "1" -- '0' is not bad
       vim.o.foldlevel = 99   -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
