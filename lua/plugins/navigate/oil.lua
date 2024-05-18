@@ -2,7 +2,8 @@ if not vim.g.vscode then
   return {
     'stevearc/oil.nvim',
     keys = {
-      { "<leader>tt", "<cmd>lua require('oil').toggle_float('.')<cr>", desc = "Browse files for editing" },
+      { "<leader>-", "<cmd>lua require('oil').toggle_float('.')<cr>", desc = "Browse files for editing" },
+      { "-", "<cmd>Oil<cr>", desc = "Open oil in current window" },
     },
     opts = {
       float = {
