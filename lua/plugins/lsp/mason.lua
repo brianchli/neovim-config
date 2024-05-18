@@ -61,6 +61,61 @@ if not vim.g.vscode then
           }
         )
       end
+    },
+    -- auto updates language server protocols installed via mason
+    {
+      'WhoIsSethDaniel/mason-tool-installer.nvim',
+      priority = 900,
+      config = function()
+        require('mason-tool-installer').setup {
+          ensure_installed = {
+            'lua-language-server',
+            "ruff",
+            "ruff_lsp",
+            "sqlls",
+            "yamlls",
+            "cmake",
+            "dockerls",
+            "astro",
+            "tsserver",
+            "cssls",
+            "eslint",
+            "emmet_ls",
+            "lua_ls",
+            "zls",
+            "texlab",
+            "jsonls",
+            "hls",
+            "clangd",
+            "prettier",
+            "prettierd",
+            "pylsp",
+            "rust-analyzer"
+          },
+          auto_update = true,
+
+        }
+        -- notify that mason-tool-installer is running
+        vim.api.nvim_create_autocmd('User', {
+          pattern = 'MasonToolsStartingInstall',
+          callback = function()
+            vim.schedule(function()
+              print 'mason-tool-installer is starting'
+            end)
+          end,
+        })
+        -- notify list of packages updated by mason-tool-installer
+        vim.api.nvim_create_autocmd('User', {
+          pattern = 'MasonToolsUpdateCompleted',
+          callback = function(e)
+            vim.schedule(function()
+              if next(e.data) ~= nil then
+                print("updated lsp(s): " + vim.inspect(e.data)) -- print the table that lists the programs that were installed
+              end
+            end)
+          end,
+        })
+      end
     }
   }
 end

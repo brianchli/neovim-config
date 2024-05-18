@@ -37,15 +37,11 @@ if not vim.g.vscode then
           { noremap = true, silent = true, desc = "goto prev diagnostic" })
 
         local ht = require('haskell-tools')
-        -- ~/.config/nvim/after/ftplugin/haskell.lua
-        local on_attach = function(client, bufnr)
-          -- Enable completion triggered by <c-x><c-o>
-          -- NOTE: Not sure if this is required? Test how it is without it for now.
-          -- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+        local on_attach = function(client, bufnr)
           -- Mappings.
           -- See `:help vim.lsp.*` for documentation on any of the below functions
-          --
+
           vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references,
             { noremap = true, silent = true, buffer = bufnr, desc = "goto references" })
           vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions,
@@ -88,16 +84,18 @@ if not vim.g.vscode then
           end
           if vim.bo.filetype == "hs" then
             local opts = { noremap = true, silent = true, buffer = bufnr, }
-            -- haskell-language-server relies heavily on codeLenses,
-            -- so auto-refresh (see advanced configuration) is enabled by default
+
+            -- 1. haskell-language-server relies heavily on codeLenses,
+            --    so auto-refresh (see advanced configuration) is enabled by default
+            -- 2. Hoogle search for the type signature of the definition under the cursor
+            -- 3. Evaluate all code snippets
+            -- 4. Toggle a GHCi repl for the current package
+            -- 5. Toggle a GHCi repl for the current buffer
+
             vim.keymap.set('n', '<space>cl', vim.lsp.codelens.run, opts)
-            -- Hoogle search for the type signature of the definition under the cursor
             vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, opts)
-            -- Evaluate all code snippets
             vim.keymap.set('n', '<space>ea', ht.lsp.buf_eval_all, opts)
-            -- Toggle a GHCi repl for the current package
             vim.keymap.set('n', '<leader>rr', ht.repl.toggle, opts)
-            -- Toggle a GHCi repl for the current buffer
             vim.keymap.set('n', '<leader>rf', function()
               ht.repl.toggle(vim.api.nvim_buf_get_name(0))
             end, opts)
@@ -105,57 +103,16 @@ if not vim.g.vscode then
           end
         end
 
-        local py_settings = {
-          pylsp = {
-            plugins = {
-              -- ruff, yapf, rope have been installed using pip
-              pyflakes = { enabled = false },
-              pylint = { enabled = false },
-              pycodestyle = { enabled = false },
-              autopep8 = { enabled = false },
-              flake8 = { enabled = false },
-              yapf = { enabled = true },
-            },
-          }
-        }
+        -- load manual configurations for some language servers
+        for _, path in ipairs(vim.api.nvim_get_runtime_file('lua/lsp/*', true)) do
+          local lsp, settings = loadfile(path)()
+          lspconfig[lsp].setup({
+            on_attach = on_attach,
+            capabilities = lsp_capabilities,
+            settings = settings
+          })
+        end
 
-        lspconfig['pylsp'].setup({
-          on_attach = on_attach,
-          capabilities = lsp_capabilities,
-          settings = py_settings
-        })
-
-        local lua_settings = {
-          Lua = {
-            diagnostics = {
-              globals = { 'vim', } -- disable unused global message
-            }
-          }
-        }
-
-        lspconfig['lua_ls'].setup({
-          on_attach = on_attach,
-          capabilities = lsp_capabilities,
-          settings = lua_settings
-        })
-
-        local ruff_settings = {
-          settings = {
-            args = {
-              '--config=' .. os.getenv('HOME') .. '/.config/nvim/lint/pyproject.toml',
-            }
-          }
-        }
-
-        lspconfig['ruff_lsp'].setup({
-          on_attach = on_attach,
-          capabilities = lsp_capabilities,
-          init_options = ruff_settings,
-        })
-
-        -- enhanced capabilities for c and rust
-        -- local c_capabilities = lsp_capabilities
-        --c_capabilities.offsetEncoding = 'utf-16'
         local _, clangd = pcall(require, 'clangd_extensions')
         clangd.setup({
           server = {
@@ -163,6 +120,7 @@ if not vim.g.vscode then
             capabilities = lsp_capabilities
           },
         })
+
         local _, rs = pcall(require, 'rust-tools')
         rs.setup({
           server = {
