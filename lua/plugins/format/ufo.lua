@@ -22,9 +22,8 @@ if not vim.g.vscode then
     priority = 900,
     opts = {
       close_fold_kinds_for_ft = {
-        default = { 'imports', 'comment' },
+        default = { 'imports', },
         json = { 'array' },
-        c = { 'comment' }
       },
       preview = {
         win_config = {
