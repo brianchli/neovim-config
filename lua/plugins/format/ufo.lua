@@ -4,18 +4,46 @@ if not vim.g.vscode then
     dependencies = { 'kevinhwang91/promise-async',
       {
         "luukvbaal/statuscol.nvim",
-        config = function()
-          local builtin = require("statuscol.builtin")
-          require("statuscol").setup(
-            {
-              relculright = true,
-              segments = {
-                { text = { builtin.foldfunc },      click = "v:lua.ScFa" },
-                { text = { "%s" },                  click = "v:lua.ScSa" },
-                { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" }
-              }
-            }
-          )
+        opts = function()
+          local builtin = require('statuscol.builtin')
+          return {
+            setopt = true,
+            -- controls the order of the columns
+            segments = {
+              {
+                text = { ' ', '%s' },
+                click = 'v:lua.ScSa'
+              },
+              {
+                text = { builtin.lnumfunc },
+                condition = { true, builtin.not_empty },
+                click = 'v:lua.ScLa',
+              },
+              { text = { ' ', builtin.foldfunc, ' ' }, click = 'v:lua.ScFa' },
+            },
+            clickmod = "c",   -- modifier used for certain actions in the builtin clickhandlers:
+            -- "a" for Alt, "c" for Ctrl and "m" for Meta.
+            clickhandlers = { -- builtin click handlers
+              Lnum                    = builtin.lnum_click,
+              FoldClose               = builtin.foldclose_click,
+              FoldOpen                = builtin.foldopen_click,
+              FoldOther               = builtin.foldother_click,
+              DapBreakpointRejected   = builtin.toggle_breakpoint,
+              DapBreakpoint           = builtin.toggle_breakpoint,
+              DapBreakpointCondition  = builtin.toggle_breakpoint,
+              DiagnosticSignError     = builtin.diagnostic_click,
+              DiagnosticSignHint      = builtin.diagnostic_click,
+              DiagnosticSignInfo      = builtin.diagnostic_click,
+              DiagnosticSignWarn      = builtin.diagnostic_click,
+              GitSignsTopdelete       = builtin.gitsigns_click,
+              GitSignsUntracked       = builtin.gitsigns_click,
+              GitSignsAdd             = builtin.gitsigns_click,
+              GitSignsChange          = builtin.gitsigns_click,
+              GitSignsChangedelete    = builtin.gitsigns_click,
+              GitSignsDelete          = builtin.gitsigns_click,
+              gitsigns_extmark_signs_ = builtin.gitsigns_click,
+            },
+          }
         end
       }
     },
@@ -57,7 +85,7 @@ if not vim.g.vscode then
         local newVirtText = {}
         local totalLines = vim.api.nvim_buf_line_count(0)
         local foldedLines = endLnum - lnum
-        local suffix = (" 󰁂 %d %d%%"):format(foldedLines, foldedLines / totalLines * 100)
+        local suffix = ("   %d %d%%"):format(foldedLines, foldedLines / totalLines * 100)
         local sufWidth = vim.fn.strdisplaywidth(suffix)
         local targetWidth = width - sufWidth
         local curWidth = 0
@@ -86,7 +114,16 @@ if not vim.g.vscode then
         return newVirtText
       end
       opts["fold_virt_text_handler"] = handler
-      require('ufo').setup(opts)
-    end
+      require("ufo").setup(opts)
+      vim.keymap.set("n", "zR", require("ufo").openAllFolds)
+      vim.keymap.set("n", "zM", require("ufo").closeAllFolds)
+      vim.keymap.set("n", "zr", require("ufo").openFoldsExceptKinds)
+      vim.keymap.set("n", "K", function()
+        local winid = require("ufo").peekFoldedLinesUnderCursor()
+        if not winid then
+          vim.lsp.buf.hover()
+        end
+      end)
+    end,
   }
 end
