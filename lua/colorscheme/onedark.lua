@@ -3,26 +3,14 @@ local onedark = {
   name = 'onedark',
   lazy = false,
   priority = 1000,
-  dependencies = { "catppuccin/nvim" },
   config = function()
-    require('catppuccin').setup({
-      flavour = 'macchiato',
-      dim_inactive = {
-        enabled = false,
-        shade = "dark",
-        percentage = 0.15,
-      },
-      integrations = {
-        cmp = true,
-        gitsigns = true,
-        nvimtree = true,
-        telescope = true,
-        notify = false,
-      },
-    })
     local cmd = vim.cmd
     vim.o.termguicolors = true
     cmd.colorscheme 'onedark'
+    -- match fold column background
+    local bg_color = vim.api.nvim_get_hl_by_name("EndOfBuffer", true).background
+    vim.api.nvim_set_hl(0, "FoldColumn", { bg = bg_color })
+
   end
 }
 
