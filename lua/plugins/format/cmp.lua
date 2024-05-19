@@ -10,9 +10,11 @@ if not vim.g.vscode then
       'hrsh7th/cmp-nvim-lua',
       'amarakon/nvim-cmp-buffer-lines',
       'rafamadriz/friendly-snippets',
+      'f3fora/cmp-spell',
       'onsails/lspkind-nvim',
       'p00f/clangd_extensions.nvim',
       'windwp/nvim-autopairs',
+      'petertriho/cmp-git',
     },
     event = {
       event = "InsertEnter",
@@ -44,6 +46,16 @@ if not vim.g.vscode then
             { name = 'nvim_lua' },
             { name = 'path' },
             { name = 'buffer' },
+            {
+              name = "spell",
+              option = {
+                keep_all_entries = false,
+                enable_in_context = function()
+                  return true
+                end,
+                preselect_correct_word = true,
+              },
+            },
           }),
           mapping = cmp.mapping.preset.insert({
             ['<C-h>'] = cmp.mapping.scroll_docs(-4),
@@ -88,22 +100,21 @@ if not vim.g.vscode then
             }
           },
         })
-        -- `/` cmdline setup.
-        cmp.setup.cmdline('/', {
-          mapping = cmp.mapping.preset.cmdline(),
-          sources = {
-            { name = 'buffer' }
-          }
-        })
-        -- `:` cmdline setup.
-        cmp.setup.cmdline(':', {
-          mapping = cmp.mapping.preset.cmdline(),
+        cmp.setup.filetype('gitcommit', {
           sources = cmp.config.sources({
-            { name = 'path' }
+            { name = 'git' },
           }, {
-            { name = 'cmdline' }
+            { name = 'buffer' },
           })
         })
+        require("cmp_git").setup()
+
+        require('cmp').setup({
+          sources = {
+            { name = 'buffer' },
+          },
+        })
+
         require("luasnip.loaders.from_vscode").lazy_load()
       end
     end
