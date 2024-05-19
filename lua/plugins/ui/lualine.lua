@@ -14,6 +14,7 @@ if not vim.g.vscode then
         local fg = hl and hl.fg or hl.foreground
         return fg and { fg = string.format("#%06x", fg) }
       end
+
       local status, ll = pcall(require, 'lualine')
       if status then
         local colors = {
@@ -28,7 +29,6 @@ if not vim.g.vscode then
         local options = {
           icons_enabled = true,
           theme = 'nightfly',
-          -- theme = 'catpuccin',
           section_separators = { left = '', right = '' },
           component_separators = "",
           globalstatus = true,
