@@ -3,19 +3,8 @@ return {
   "folke/noice.nvim",
   event = "VeryLazy",
   opts = {
-    lsp = {
-      override = {
-        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-        ["vim.lsp.util.stylize_markdown"] = true,
-      },
-    },
-    presets = {
-      bottom_search = true,
-      command_palette = true,
-      long_message_to_split = true,
-    },
+    -- add any options here
   },
-  -- stylua: ignore
   keys = {
     {
       "<S-Enter>",
@@ -48,15 +37,16 @@ return {
       mode = {
         "i", "n", "s" }
     },
-    {
-      "<c-b>",
-      function() if not require("noice.lsp").scroll(-4) then return "<c-b>" end end,
-      silent = true,
-      expr = true,
-      desc =
-      "Scroll backward",
-      mode = {
-        "i", "n", "s" }
-    },
   },
+  dependencies = {
+    -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+    "MunifTanjim/nui.nvim",
+    -- OPTIONAL:
+    --   `nvim-notify` is only needed, if you want to use the notification view.
+    --   If not available, we use `mini` as the fallback
+    "rcarriga/nvim-notify",
+  },
+  config = function()
+    require("noice").setup()
+  end
 }
