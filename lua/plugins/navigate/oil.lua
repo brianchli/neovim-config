@@ -9,7 +9,6 @@ if not vim.g.vscode then
       float = {
         padding = 10,
         max_width = 100,
-        max_height = 20,
       },
       keymaps = {
         ["q"] = "actions.close",
