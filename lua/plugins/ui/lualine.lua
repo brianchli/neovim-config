@@ -103,13 +103,6 @@ if not vim.g.vscode then
                   newfile = '[New]',
                 },
               },
-              {
-                function()
-                  return require("nvim-navic").get_location()
-                end,
-                cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
-                padding = { left = 1, right = 0 },
-              },
             },
             lualine_x = ll_x,
             lualine_y = ll_y,
