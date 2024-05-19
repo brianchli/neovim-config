@@ -5,10 +5,10 @@ line-length = 88
 select = [
     "E",        # pyflake
     "F", "W",   # pycodestyle
-    "ICN",      # pyflakes; import convention 
+    "ICN",      # pyflakes; import convention
     "COM",      # flake8; commas
-    "A",        # flake8; builtins 
-    "C4",       # flake8; comprehensions 
+    "A",        # flake8; builtins
+    "C4",       # flake8; comprehensions
     "B",        # flake8; bugbear
     "PT",       # flake8; pytest style
     "N",        # pep8 - naming
@@ -20,7 +20,7 @@ select = [
 # `F405` (undefined * imports).
 ignore = [
     "F401",
-    "F403", 
+    "F403",
     "F405",
     "F841",
     "E999",
