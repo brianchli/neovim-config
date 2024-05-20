@@ -1,4 +1,3 @@
--- lualine
 if not vim.g.vscode then
   return {
     'nvim-lualine/lualine.nvim',
@@ -7,14 +6,6 @@ if not vim.g.vscode then
     },
     priority = 850,
     config = function()
-      local function fn(name)
-        ---@type {foreground?:number}?
-        local hl = vim.api.nvim_get_hl and vim.api.nvim_get_hl(0, { name = name }) or
-            vim.api.nvim_get_hl_by_name(name, true)
-        local fg = hl and hl.fg or hl.foreground
-        return fg and { fg = string.format("#%06x", fg) }
-      end
-
       local status, ll = pcall(require, 'lualine')
       if status then
         local colors = {
@@ -55,13 +46,11 @@ if not vim.g.vscode then
           {
             function() return require("noice").api.status.command.get() end,
             cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
-            color = fn("Statement"),
           },
-          { require("lazy.status").updates, cond = require("lazy.status").has_updates, color = fn("Special") },
+          { require("lazy.status").updates, cond = require("lazy.status").has_updates, },
           {
             function() return require("noice").api.status.mode.get() end,
             cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
-            color = fn("Constant"),
           },
           {
             "fileformat",
