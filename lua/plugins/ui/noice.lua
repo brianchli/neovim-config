@@ -47,6 +47,8 @@ return {
     "rcarriga/nvim-notify",
   },
   config = function()
-    require("noice").setup()
+    require("noice").setup {
+      presets = { inc_rename = true }
+    }
   end
 }
