@@ -16,20 +16,25 @@ if not vim.g.vscode then
         lazy = false,   -- This plugin is already lazy
       }
     },
+    init = function()
+      vim.o.inccommand = "split"
+    end,
     priority = 950,
     config = function()
       local status, lspconfig = pcall(require, 'lspconfig')
       if status then
-        local _, navic                    = pcall(require, 'nvim-navic')
-        local lsp_capabilities            = vim.tbl_deep_extend("force",
+        local _, navic     = pcall(require, 'nvim-navic')
+        local capabilities = vim.tbl_deep_extend("force",
           vim.lsp.protocol.make_client_capabilities(),
-          require('cmp_nvim_lsp').default_capabilities()
+          require('cmp_nvim_lsp').default_capabilities(),
+          {
+            update_in_insert = { false },
+            flags = {
+              debounce_text_changes = 150,
+              allow_incremental_sync = true,
+            }
+          }
         )
-        lsp_capabilities.update_in_insert = false
-        lsp_capabilities.flags            = {
-          debounce_text_changes = 150,
-          allow_incremental_sync = true,
-        }
 
         vim.keymap.set('n', '[d', vim.diagnostic.goto_prev,
           { noremap = true, silent = true, desc = "goto next diagnostic" })
@@ -67,8 +72,10 @@ if not vim.g.vscode then
             { noremap = true, silent = true, buffer = bufnr, desc = "buf document symbols" })
           vim.keymap.set('n', '<space>ds', require('telescope.builtin').lsp_dynamic_workspace_symbols,
             { noremap = true, silent = true, buffer = bufnr, desc = "buf document symbols" })
-          vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename,
-            { noremap = true, silent = true, buffer = bufnr, desc = "buf rename" })
+          vim.keymap.set('n', '<space>rn', function()
+              return ":IncRename " .. vim.fn.expand("<cword>")
+            end,
+            { expr = true, noremap = true, silent = true, buffer = bufnr, desc = "buf rename" })
           vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action,
             { noremap = true, silent = true, buffer = bufnr, desc = "code actions" })
           vim.keymap.set('n', '<space>F', function() vim.lsp.buf.format { async = true } end,
@@ -108,7 +115,7 @@ if not vim.g.vscode then
           local lsp, settings = loadfile(path)()
           lspconfig[lsp].setup({
             on_attach = on_attach,
-            capabilities = lsp_capabilities,
+            capabilities = capabilities,
             settings = settings
           })
         end
@@ -117,7 +124,7 @@ if not vim.g.vscode then
         clangd.setup({
           server = {
             on_attach = on_attach,
-            capabilities = lsp_capabilities
+            capabilities = capabilities
           },
         })
 
@@ -125,7 +132,7 @@ if not vim.g.vscode then
         rs.setup({
           server = {
             on_attach = on_attach,
-            capabilities = lsp_capabilities,
+            capabilities = capabilities,
           },
           inlay_hints = { only_current_line = true },
         })
@@ -150,13 +157,13 @@ if not vim.g.vscode then
           if lsp == 'emmet_ls' then
             lspconfig[lsp].setup({
               on_attach = on_attach,
-              capabilities = lsp_capabilities,
+              capabilities = capabilities,
               filetypes = { 'javascript', 'typescript', 'astro' }
             })
           end
           lspconfig[lsp].setup({
             on_attach = on_attach,
-            capabilities = lsp_capabilities,
+            capabilities = capabilities,
           })
         end
       end
