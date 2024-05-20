@@ -2,19 +2,23 @@ if not vim.g.vscode then
   return {
     {
       'nvim-telescope/telescope.nvim',
-      dependencies = { 'nvim-lua/plenary.nvim', },
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+        'piersolenski/telescope-import.nvim',
+      },
       priority = 900,
       keys = {
-        { "<leader>ff", "<cmd>Telescope find_files<cr>",  desc = "find files" },
-        { "<leader>fm", "<cmd>Telescope man_pages<cr>",   desc = "find man page" },
-        { "<leader>fc", "<cmd>Telescope commands<cr>",    desc = "find command" },
-        { "<leader>fh", "<cmd>Telescope help_tags<cr>",   desc = "find help tags" },
-        { "<leader>fb", "<cmd>Telescope buffers<cr>",     desc = "find buffers" },
-        { "<leader>so", "<cmd>Telescope vim_options<cr>", desc = "find options" },
-        { "<leader>fg", "<cmd>Telescope git_commits<cr>", desc = "find commits" },
+        { "<leader>ff", "<cmd>Telescope find_files<cr>",   desc = "find files" },
+        { "<leader>fm", "<cmd>Telescope man_pages<cr>",    desc = "find man page" },
+        { "<leader>fc", "<cmd>Telescope commands<cr>",     desc = "find command" },
+        { "<leader>fh", "<cmd>Telescope help_tags<cr>",    desc = "find help tags" },
+        { "<leader>fb", "<cmd>Telescope buffers<cr>",      desc = "find buffers" },
+        { "<leader>so", "<cmd>Telescope vim_options<cr>",  desc = "find options" },
+        { "<leader>fg", "<cmd>Telescope git_commits<cr>",  desc = "find commits" },
         { "<leader>fG", "<cmd>Telescope git_bcommits<cr>", desc = "find commits with diff in current buffer" },
-        { "<leader>f?", "<cmd>Telescope builtin<cr>", desc = "find telescope builtins" },
-        { "<leader>fs", "<cmd>Telescope live_grep<cr>", desc = "find substring" },
+        { "<leader>f?", "<cmd>Telescope builtin<cr>",      desc = "find telescope builtins" },
+        { "<leader>fs", "<cmd>Telescope live_grep<cr>",    desc = "find substring" },
+        { "<leader>fi", "<cmd>Telescope import<cr>",       desc = "find imports" },
       },
     },
     {
@@ -62,10 +66,32 @@ if not vim.g.vscode then
             ["ui-select"] = {
               require('telescope.themes').get_dropdown {}
 
+            },
+            ["import"] = {
+              -- Add imports to the top of the file keeping the cursor in place
+              insert_at_top = true,
+              -- Support additional languages
+              custom_languages = {
+                {
+                  -- The regex pattern for the import statement
+                  regex = [[^(?:import(?:[\"'\s]*([\w*{}\n, ]+)from\s*)?[\"'\s](.*?)[\"'\s].*)]],
+                  -- The Vim filetypes
+                  filetypes = { "typescript", "typescriptreact", "javascript", "react" },
+                  -- The filetypes that ripgrep supports (find these via `rg --type-list`)
+                  extensions = { "js", "ts" },
+                },
+                {
+                  regex = [[^(?:#include <.*>)]],
+                  filetypes = { "c", "cpp" },
+                  extensions = { "h", "c", "cpp" },
+                },
+              },
+
             }
           }
         })
         require('telescope').load_extension('ui-select')
+        require('telescope').load_extension('import')
       end
     },
   }
