@@ -8,7 +8,7 @@ return {
     -- set up icon colors and backgrounds
     local icons = colors.peach
     -- set background color to match default background
-    local bg_color = vim.api.nvim_get_hl_by_name("EndOfBuffer", true).background
+    local bg_color = vim.api.nvim_get_hl(0, { name = "Normal", link = false }).bg
     -- set colors
     vim.api.nvim_set_hl(0, "NavicIconsFile", { default = true, bg = bg_color, fg = icons })
     vim.api.nvim_set_hl(0, "NavicIconsModule", { default = true, bg = bg_color, fg = icons })
