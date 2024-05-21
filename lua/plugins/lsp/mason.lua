@@ -21,9 +21,10 @@ if not vim.g.vscode then
       end
     },
     -- set up lsp integration with mason
+    -- whil
     {
       'williamboman/mason-lspconfig.nvim',
-      priority = 950,
+      priority = 930,
       opts = {
         ensure_installed = {
           "ruff_lsp",
@@ -65,7 +66,7 @@ if not vim.g.vscode then
     -- auto updates language server protocols installed via mason
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
-      priority = 900,
+      priority = 960,
       config = function()
         require('mason-tool-installer').setup {
           ensure_installed = {
