@@ -100,6 +100,7 @@ if not vim.g.vscode then
             }
           },
         })
+
         cmp.setup.filetype('gitcommit', {
           sources = cmp.config.sources({
             { name = 'git' },
@@ -107,13 +108,8 @@ if not vim.g.vscode then
             { name = 'buffer' },
           })
         })
-        require("cmp_git").setup()
 
-        require('cmp').setup({
-          sources = {
-            { name = 'buffer' },
-          },
-        })
+        require("cmp_git").setup()
 
         require("luasnip.loaders.from_vscode").lazy_load()
       end
