@@ -37,7 +37,7 @@ map("v", "<", "<gv", { noremap = true })
 map("v", ">", ">gv", { noremap = true })
 
 -- Copy all
-map("n", "<C-y>", "gg<S-v>G\"+y")
+map("n", "<C-y>", "<cmd>:%y+<cr>")
 
 -- multi-line replace
 map("v", "<leader>rp", ":s/", { desc = "replace text", noremap = true }) -- regex replace visual mode
