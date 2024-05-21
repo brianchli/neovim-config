@@ -30,7 +30,7 @@ local catpuccin_theme = {
       vim.api.nvim_set_hl(
         0, 'CurSearch', { bg = macchiato.surface1, fg = macchiato.text })
 
-      local bg_color = vim.api.nvim_get_hl_by_name("EndOfBuffer", true).background
+      local bg_color = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
       vim.api.nvim_set_hl(0, "FoldColumn", { bg = bg_color })
     end,
     priority = 1000
