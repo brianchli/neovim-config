@@ -24,7 +24,7 @@ vim.opt.clipboard = "unnamedplus" -- Sync with system clipboard
 vim.opt.shortmess = vim.opt.shortmess + "c"
 
 -- Show diagnostic popup on cursor hover
-vim.opt.updatetime = 100
+vim.opt.updatetime = 450
 
 -- [[ Context ]]
 vim.opt.number = true         -- Show line numbers

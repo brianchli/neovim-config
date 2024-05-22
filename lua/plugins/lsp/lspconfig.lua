@@ -89,6 +89,12 @@ if not vim.g.vscode then
             if vim.bo.filetype == "cpp" then
               require("clangd_extensions.inlay_hints").setup_autocmd()
               require("clangd_extensions.inlay_hints").set_inlay_hints()
+              local group = vim.api.nvim_create_augroup("clangd_no_inlay_hints_in_insert", { clear = true })
+              vim.api.nvim_create_autocmd({ "TextChanged", "CursorMoved" }, {
+                group = group,
+                buffer = bufnr,
+                callback = require("clangd_extensions.inlay_hints").disable_inlay_hints
+              })
             end
             if vim.bo.filetype == "hs" then
               local opts = { noremap = true, silent = true, buffer = bufnr, }
@@ -129,7 +135,9 @@ if not vim.g.vscode then
             },
             inlay_hints = {
               only_current_line = true,
-              only_current_line_autocmd = { "CursorMoved", "InsertEnter" },
+              only_current_line_autocmd = {
+                "CursorHold"
+              },
             }
           })
 
