@@ -6,6 +6,7 @@
 --
 
 vim.wo.cursorline = true
+vim.wo.cursorcolumn = true
 
 -- vimscript commands
 vim.g.highlights_insert_mode_enabled = false
@@ -24,7 +25,7 @@ vim.opt.clipboard = "unnamedplus" -- Sync with system clipboard
 vim.opt.shortmess = vim.opt.shortmess + "c"
 
 -- Show diagnostic popup on cursor hover
-vim.opt.updatetime = 450
+vim.opt.updatetime = 150
 
 -- [[ Context ]]
 vim.opt.number = true         -- Show line numbers
