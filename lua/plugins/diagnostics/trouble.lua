@@ -2,14 +2,22 @@ if not vim.g.vscode then
   return {
     'folke/trouble.nvim',
     dependencies = 'nvim-tree/nvim-web-devicons',
-    cmd = { "TroubleToggle", "Trouble" },
+    cmd = { "Trouble" },
     opts = { use_diagnostic_signs = true },
     keys = {
-      { "<leader>xx", "<cmd>TroubleToggle document_diagnostics<cr>", desc = "toggle trouble" },
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "toggle trouble"
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
     },
     priority = 750,
     config = function()
-      local cmd = vim.cmd
       local status, tr = pcall(require, 'trouble')
       if status then
         tr.setup(
@@ -17,7 +25,6 @@ if not vim.g.vscode then
             position = "bottom",
             height = 10,
             width = 50,
-            icons = true,
             group = true,
             padding = true,
             action_keys = {
@@ -55,7 +62,12 @@ if not vim.g.vscode then
         })
         vim.api.nvim_create_autocmd({ "QuitPre", "ExitPre" }, {
           callback = function()
-            cmd('TroubleClose')
+            local ok, trouble = pcall(require, 'trouble')
+            if ok then
+              if trouble.is_open() then
+                trouble.close()
+              end
+            end
           end,
           group = autoclose,
         })

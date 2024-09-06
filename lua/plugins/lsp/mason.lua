@@ -11,6 +11,7 @@ if not vim.g.vscode then
         -- enable mason and configure icons
         local mason = require('mason')
         mason.setup({
+          PATH = "append",
           ui = {
             icons = {
               package_pending = "➜",
@@ -21,10 +22,9 @@ if not vim.g.vscode then
       end
     },
     -- set up lsp integration with mason
-    -- whil
     {
       'williamboman/mason-lspconfig.nvim',
-      priority = 930,
+      priority = 970,
       opts = {
         ensure_installed = {
           "ruff_lsp",
@@ -42,7 +42,7 @@ if not vim.g.vscode then
           "zls",
           "texlab",
           "jsonls",
-          "hls"
+          "rust_analyzer",
         },
         automatic_installation = true,
       }
@@ -70,13 +70,14 @@ if not vim.g.vscode then
       config = function()
         require('mason-tool-installer').setup {
           ensure_installed = {
-            'lua-language-server',
+            "lua-language-server",
+            "cspell",
             "ruff",
             "ruff_lsp",
             "sqlls",
             "yamlls",
             "cmake",
-            "dockerls",
+            "dockerfile-language-server",
             "astro",
             "tsserver",
             "cssls",
@@ -86,9 +87,8 @@ if not vim.g.vscode then
             "zls",
             "texlab",
             "jsonls",
-            "hls",
             "clangd",
-            "prettier",
+            -- "prettier",
             "prettierd",
             "pylsp",
             "rust-analyzer"
@@ -96,26 +96,6 @@ if not vim.g.vscode then
           auto_update = true,
 
         }
-        -- notify that mason-tool-installer is running
-        vim.api.nvim_create_autocmd('User', {
-          pattern = 'MasonToolsStartingInstall',
-          callback = function()
-            vim.schedule(function()
-              print 'mason-tool-installer is starting'
-            end)
-          end,
-        })
-        -- notify list of packages updated by mason-tool-installer
-        vim.api.nvim_create_autocmd('User', {
-          pattern = 'MasonToolsUpdateCompleted',
-          callback = function(e)
-            vim.schedule(function()
-              if next(e.data) ~= nil then
-                print("updated lsp(s): " + vim.inspect(e.data)) -- print the table that lists the programs that were installed
-              end
-            end)
-          end,
-        })
       end
     }
   }

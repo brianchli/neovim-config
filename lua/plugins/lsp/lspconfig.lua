@@ -11,38 +11,39 @@ if not vim.g.vscode then
         'SmiteshP/nvim-navic',
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
-        {
-          'mrcjkb/haskell-tools.nvim',
-          version = '^3', -- Recommended
-          lazy = false,   -- This plugin is already lazy
-        }
       },
       init = function()
         vim.o.inccommand = "split"
       end,
       priority = 950,
-      config = function()
+      opts = function()
+        return {
+          servers = {
+            'html',
+            'cssls',
+            'tsserver',
+            'emmet_ls',
+            'sqlls',
+            'dockerls',
+            'yamlls',
+            'astro',
+            'jsonls',
+            'zls',
+            'texlab',
+            'clangd',
+            'rust_analyzer',
+          }
+        };
+      end,
+      config = function(_, opts)
         local status, lspconfig = pcall(require, 'lspconfig')
         if status then
-          local _, navic     = pcall(require, 'nvim-navic')
-          local capabilities = vim.tbl_deep_extend("force",
-            vim.lsp.protocol.make_client_capabilities(),
-            require('cmp_nvim_lsp').default_capabilities(),
-            {
-              update_in_insert = { false },
-              flags = {
-                debounce_text_changes = 150,
-                allow_incremental_sync = true,
-              }
-            }
-          )
+          local _, navic = pcall(require, 'nvim-navic')
 
           vim.keymap.set('n', '[d', vim.diagnostic.goto_prev,
             { noremap = true, silent = true, desc = "goto next diagnostic" })
           vim.keymap.set('n', ']d', vim.diagnostic.goto_next,
             { noremap = true, silent = true, desc = "goto prev diagnostic" })
-
-          local ht = require('haskell-tools')
 
           local on_attach = function(client, bufnr)
             -- Mappings.
@@ -86,41 +87,55 @@ if not vim.g.vscode then
               navic.attach(client, bufnr)
             end
 
+
+            local highlight_group = vim.api.nvim_create_augroup("highlight word under cursor", { clear = true })
+            -- highlight word
+            vim.api.nvim_create_autocmd({ "CursorHold" }, {
+              group = highlight_group,
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.document_highlight()
+              end
+            })
+
+            -- clear highlights
+            vim.api.nvim_create_autocmd({ "CursorMoved" }, {
+              group = highlight_group,
+              buffer = bufnr,
+              callback = function()
+                vim.lsp.buf.clear_references()
+              end
+            })
+
             if vim.bo.filetype == "cpp" then
               require("clangd_extensions.inlay_hints").setup_autocmd()
               require("clangd_extensions.inlay_hints").set_inlay_hints()
               local group = vim.api.nvim_create_augroup("clangd_no_inlay_hints_in_insert", { clear = true })
-              vim.api.nvim_create_autocmd({ "TextChanged", "CursorMoved" }, {
+              vim.api.nvim_create_autocmd({ "TextChanged", "InsertEnter" }, {
                 group = group,
                 buffer = bufnr,
                 callback = require("clangd_extensions.inlay_hints").disable_inlay_hints
               })
             end
-            if vim.bo.filetype == "hs" then
-              local opts = { noremap = true, silent = true, buffer = bufnr, }
-
-              -- 1. haskell-language-server relies heavily on codeLenses,
-              --    so auto-refresh (see advanced configuration) is enabled by default
-              -- 2. Hoogle search for the type signature of the definition under the cursor
-              -- 3. Evaluate all code snippets
-              -- 4. Toggle a GHCi repl for the current package
-              -- 5. Toggle a GHCi repl for the current buffer
-
-              vim.keymap.set('n', '<space>cl', vim.lsp.codelens.run, opts)
-              vim.keymap.set('n', '<space>hs', ht.hoogle.hoogle_signature, opts)
-              vim.keymap.set('n', '<space>ea', ht.lsp.buf_eval_all, opts)
-              vim.keymap.set('n', '<leader>rr', ht.repl.toggle, opts)
-              vim.keymap.set('n', '<leader>rf', function()
-                ht.repl.toggle(vim.api.nvim_buf_get_name(0))
-              end, opts)
-              vim.keymap.set('n', '<leader>rq', ht.repl.quit, opts)
-            end
           end
 
+          local capabilities = vim.tbl_deep_extend("force",
+            vim.lsp.protocol.make_client_capabilities(),
+            require('cmp_nvim_lsp').default_capabilities(),
+            {
+              --offsetEncoding = 'utf-16',
+              update_in_insert = { false },
+              flags = {
+                debounce_text_changes = 150,
+                allow_incremental_sync = true,
+              }
+            }
+          )
           -- load manual configurations for some language servers
+          -- NOTE: the settings table may differ depending on the lang server
           for _, path in ipairs(vim.api.nvim_get_runtime_file('lua/lsp/*', true)) do
-            local lsp, settings = loadfile(path)()
-            lspconfig[lsp].setup({
+            local lang, settings = loadfile(path)()
+            lspconfig[lang].setup({
               on_attach = on_attach,
               capabilities = capabilities,
               settings = settings
@@ -131,7 +146,7 @@ if not vim.g.vscode then
           clangd.setup({
             server = {
               on_attach = on_attach,
-              capabilities = capabilities
+              capabilities = capabilities,
             },
             inlay_hints = {
               only_current_line = true,
@@ -141,43 +156,23 @@ if not vim.g.vscode then
             }
           })
 
-          local _, rs = pcall(require, 'rust-tools')
-          rs.setup({
-            server = {
-              on_attach = on_attach,
-              capabilities = capabilities,
-            },
-            inlay_hints = { only_current_line = true },
-          })
-
-          -- generic settings
-          local servers = {
-            'html',
-            'cssls',
-            'tsserver',
-            'emmet_ls',
-            'sqlls',
-            'dockerls',
-            'yamlls',
-            'astro',
-            'clangd',
-            'jsonls',
-            'zls',
-            'texlab',
-          }
-
-          for _, lsp in ipairs(servers) do
+          local function configure_lsp(lsp, capabilities)
             if lsp == 'emmet_ls' then
               lspconfig[lsp].setup({
                 on_attach = on_attach,
                 capabilities = capabilities,
                 filetypes = { 'javascript', 'typescript', 'astro' }
               })
+            else
+              lspconfig[lsp].setup({
+                on_attach = on_attach,
+                capabilities = capabilities,
+              })
             end
-            lspconfig[lsp].setup({
-              on_attach = on_attach,
-              capabilities = capabilities,
-            })
+          end
+
+          for _, lsp in ipairs(opts.servers) do
+            configure_lsp(lsp, capabilities)
           end
         end
       end
@@ -190,9 +185,6 @@ if not vim.g.vscode then
         null_ls.setup({
           sources = {
             null_ls.builtins.code_actions.proselint,
-            null_ls.builtins.code_actions.refactoring,
-            null_ls.builtins.diagnostics.mypy,
-            null_ls.builtins.completion.spell,
           },
         })
       end

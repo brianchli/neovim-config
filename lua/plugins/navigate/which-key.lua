@@ -4,29 +4,19 @@ return {
     vim.o.timeout = true
     vim.o.timeoutlen = 300
     require("which-key").setup({})
-    local wk = require("which-key")
-    wk.register({
-      f = {
-        name = "find", -- optional group name
-      },
-      t = {
-        name = "git", -- optional group name
-      },
-      h = {
-        name = "harpoon"
-      },
-      c = {
-        name = "code",
-        a = "code highlights",
-        h = "disable search highlights",
-        b = "search buffers",
-      },
-      y = {
-        name = "yank to clipboard",
-      },
-      q = {
-        name = "close buffer",
-      },
-    }, { prefix = "<leader>" })
+
+    -- NOTE: Fix this later
+    --    local custom_mappings = {
+    --      { "<leader>c",  group = "code" },
+    --      { "<leader>ca", desc = "code highlights" },
+    --      { "<leader>cb", desc = "search buffers" },
+    --      { "<leader>ch", desc = "disable search highlights" },
+    --      { "<leader>f",  group = "find" },
+    --      { "<leader>h",  group = "harpoon" },
+    --      { "<leader>q",  group = "close buffer" },
+    --      { "<leader>t",  group = "git" },
+    --      { "<leader>y",  group = "yank to clipboard" },
+    --    }
+    -- wk.register(custom_mappings)
   end,
 }

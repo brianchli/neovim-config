@@ -37,10 +37,17 @@ if not vim.g.vscode then
               "toml",
               "rust",
               "zig",
-              "haskell"
+              "haskell",
+              "vim",
+              "vimdoc"
             },
-            highlight = { enable = true },
-            indent = { enable = true },
+
+            highlight = {
+              enable = true
+            },
+            indent = {
+              enable = true
+            },
             incremental_selection = {
               enabled = true
             }
