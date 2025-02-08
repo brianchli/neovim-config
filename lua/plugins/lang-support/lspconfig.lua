@@ -21,7 +21,7 @@ if not vim.g.vscode then
           servers = {
             'html',
             'cssls',
-            'tsserver',
+            'ts_ls',
             'emmet_ls',
             'sqlls',
             'dockerls',

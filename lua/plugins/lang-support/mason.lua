@@ -27,14 +27,13 @@ if not vim.g.vscode then
       priority = 970,
       opts = {
         ensure_installed = {
-          "ruff_lsp",
           "ruff",
           "sqlls",
           "yamlls",
           "cmake",
           "dockerls",
           "astro",
-          "tsserver",
+          "ts_ls",
           "cssls",
           "eslint",
           "emmet_ls",
@@ -47,22 +46,6 @@ if not vim.g.vscode then
         automatic_installation = true,
       }
     },
-    -- set up dap installer integration with mason
-    {
-      "jay-babu/mason-nvim-dap.nvim",
-      priority = 950,
-      dependencies = {
-        'williamboman/mason.nvim',
-      },
-      config = function()
-        require("mason-nvim-dap").setup(
-          {
-            handlers = {},
-            ensure_installed = { "python", "codelldb" },
-          }
-        )
-      end
-    },
     -- auto updates language server protocols installed via mason
     {
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -73,13 +56,12 @@ if not vim.g.vscode then
             "lua-language-server",
             "cspell",
             "ruff",
-            "ruff_lsp",
             "sqlls",
             "yamlls",
             "cmake",
             "dockerfile-language-server",
             "astro",
-            "tsserver",
+            "ts_ls",
             "cssls",
             "eslint",
             "emmet_ls",

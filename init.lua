@@ -16,8 +16,8 @@ if not vim.g.vscode then
   cmd "sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo"
   cmd "sign define DiagnosticSignHint text=● texthl=DiagnosticSignHint"
 
-  require('config.opts')      -- options
-  require('config.keymaps')   -- key mappings
-  require('config.autofuncs') -- functions and autocommands
-  require('config.setup')     -- plugins
+  require('conf.opts')      -- options
+  require('conf.keymaps')   -- key mappings
+  require('conf.autofuncs') -- functions and autocmds
+  require('conf.setup')     -- plugins
 end

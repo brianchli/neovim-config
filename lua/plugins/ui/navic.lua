@@ -46,7 +46,7 @@ return {
       depth_limit = 5,
       depth_limit_indicator = "..",
       safe_output = true,
-      icons = require("config.icons").kinds,
+      icons = require("conf.icons").kinds,
     }
   end,
 }

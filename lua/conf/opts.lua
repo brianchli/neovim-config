@@ -29,7 +29,6 @@ vim.opt.updatetime = 150
 
 -- [[ Context ]]
 vim.opt.number = true         -- Show line numbers
-vim.opt.relativenumber = true -- Show relative line numbers
 vim.opt.signcolumn = "yes"    -- Show the sign column
 vim.opt.laststatus = 2        -- Always show status line
 vim.opt.scrolloff = 4         -- Min num lines of context

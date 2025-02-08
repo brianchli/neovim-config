@@ -55,18 +55,6 @@ api.nvim_create_autocmd("FileType", {
   end,
 })
 
---
----- auto format specified buffers on write
---api.nvim_create_autocmd("BufWritePre", {
---  group = augroup('autoformat'),
---  -- removed lua, html and c (due to OS) formatting
---  pattern = { '*.jsx', '*.py', '*.rs', '*.cpp' },
---  callback = function()
---    vim.lsp.buf.format(nil, 200)
---  end,
---})
---
-
 -- display diagnostics as hovers
 api.nvim_create_autocmd("CursorHold", {
   group = augroup('diagnostic_hover'),
@@ -137,39 +125,6 @@ vim.api.nvim_create_autocmd("FileType", {
   pattern = { "help", "man", "checkhealth" },
   callback = function()
     vim.opt_local.spell = false
-  end,
-})
-
--- auto clean tex compilation files
-vim.api.nvim_create_autocmd("VimLeavePre", {
-  pattern = "*.tex",
-  group = augroup("auto_clean_tex"),
-  callback = function()
-    vim.cmd("VimtexStop")
-    vim.cmd("VimtexClean")
-  end,
-})
-
--- add vimtex commands on enter to *.tex files
-vim.api.nvim_create_autocmd("VimEnter", {
-  pattern = "*.tex",
-  group = augroup("add_vimtex_commands"),
-  callback = function()
-    vim.keymap.set('n', '<leader>l<Space>', "<cmd>VimtexCompile<cr>",
-      { noremap = true, silent = true, desc = "start continous latex compilation" })
-    vim.keymap.set('n', '<leader>l<Enter>', "<cmd>VimtexCompileSS<cr>",
-      { noremap = true, silent = true, desc = "compile latex document snapshot" })
-    vim.keymap.set('n', '<leader>ls', "<cmd>VimtexStop<cr>",
-      { noremap = true, silent = true, desc = "stop latex document compilation" })
-    vim.keymap.set('n', '<leader>ll', "<cmd>VimtexLog<cr>",
-      { noremap = true, silent = true, desc = "display latex compilation logs" })
-    vim.keymap.set('n', '<leader>li', "<cmd>VimtexInfo<cr>",
-      { noremap = true, silent = true, desc = "display Vimtex instance information" })
-    vim.keymap.set('n', '<leader>lc', "<cmd>VimtexClear<cr>",
-      { noremap = true, silent = true, desc = "clear Vimtex generated files" })
-    vim.keymap.set('n', '<leader>lr', "<cmd>VimtexReload<cr>",
-      { noremap = true, silent = true, desc = "reload Vimtex plugin" })
-    vim.cmd("VimtexCompile")
   end,
 })
 

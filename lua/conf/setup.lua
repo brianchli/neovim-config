@@ -1,7 +1,7 @@
 -- load lazy
 if not vim.g.vscode then
   local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
-  if not vim.loop.fs_stat(lazypath) then
+  if not vim.uv.fs_stat(lazypath) then
     vim.fn.system({
       'git',
       'clone',
@@ -18,9 +18,9 @@ if not vim.g.vscode then
       spec = {
         { import = 'plugins.main' },
         { import = 'plugins.ui' },
-        { import = 'plugins.lsp' },
-        { import = 'plugins.format' },
-        { import = 'plugins.navigate' },
+        { import = 'plugins.lang-support' },
+        { import = 'plugins.styling' },
+        { import = 'plugins.navigation' },
         { import = 'plugins.extras' },
         { import = 'plugins.diagnostics' },
       },

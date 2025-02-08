@@ -6,5 +6,5 @@ return {
   { 'bluz71/vim-nightfly-colors',    name = 'nightfly', lazy = false },
   { 'olivercederborg/poimandres.nvim', name = 'poimandres', lazy = false },
   { 'Mofiqul/vscode.nvim', name = 'vscode', lazy = false },
-  { 'navarasu/onedark.nvim', name = 'onedark', lazy = false },
+  { 'p00f/alabaster.nvim', name = 'alabaster', lazy = false },
 }
