@@ -109,17 +109,6 @@ if not vim.g.vscode then
                 vim.lsp.buf.clear_references()
               end
             })
-
-            if vim.bo.filetype == "cpp" then
-              require("clangd_extensions.inlay_hints").setup_autocmd()
-              require("clangd_extensions.inlay_hints").set_inlay_hints()
-              local group = vim.api.nvim_create_augroup("clangd_no_inlay_hints_in_insert", { clear = true })
-              vim.api.nvim_create_autocmd({ "TextChanged", "InsertEnter" }, {
-                group = group,
-                buffer = bufnr,
-                callback = require("clangd_extensions.inlay_hints").disable_inlay_hints
-              })
-            end
           end
 
           local capabilities = vim.tbl_deep_extend("force",
