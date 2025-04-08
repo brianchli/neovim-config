@@ -41,7 +41,6 @@ if not vim.g.vscode then
           "zls",
           "texlab",
           "jsonls",
-          "rust_analyzer",
         },
         automatic_installation = true,
       }
@@ -73,7 +72,6 @@ if not vim.g.vscode then
             -- "prettier",
             "prettierd",
             "pylsp",
-            "rust-analyzer"
           },
           auto_update = true,
 

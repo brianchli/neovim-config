@@ -6,11 +6,15 @@ if not vim.g.vscode then
       dependencies = {
         'hrsh7th/nvim-cmp',
         'hrsh7th/cmp-nvim-lsp',
-        'simrat39/rust-tools.nvim',
         'p00f/clangd_extensions.nvim',
         'SmiteshP/nvim-navic',
         'williamboman/mason.nvim',
         'williamboman/mason-lspconfig.nvim',
+        {
+          'mrcjkb/rustaceanvim',
+          version = '^5', -- Recommended
+          lazy = false,   -- This plugin is already lazy
+        }
       },
       init = function()
         vim.o.inccommand = "split"
@@ -31,7 +35,6 @@ if not vim.g.vscode then
             'zls',
             'texlab',
             'clangd',
-            'rust_analyzer',
           }
         };
       end,
@@ -174,6 +177,12 @@ if not vim.g.vscode then
           for _, lsp in ipairs(opts.servers) do
             configure_lsp(lsp, capabilities)
           end
+
+          vim.g.rustaceanvim = {
+            server = {
+              on_attach = on_attach
+            }
+          }
         end
       end
     },
@@ -188,6 +197,6 @@ if not vim.g.vscode then
           },
         })
       end
-    }
+    },
   }
 end
