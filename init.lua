@@ -16,9 +16,10 @@ if not vim.g.vscode then
   cmd "sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo"
   cmd "sign define DiagnosticSignHint text=● texthl=DiagnosticSignHint"
 
-  require('conf.opts')      -- options
-  require('conf.keymaps')   -- key mappings
-  require('conf.autofuncs') -- functions and autocmds
+  require('opts')      -- options
+  require('keymaps')   -- key mappings
+  require('autofuncs') -- functions and autocmds
+  require('globals')
 
   local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
   if not vim.uv.fs_stat(lazypath) then
