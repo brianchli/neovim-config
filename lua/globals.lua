@@ -1,4 +1,4 @@
-return {
+_G.icons = {
   dap = {
     Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
     Breakpoint = " ",

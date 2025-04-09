@@ -35,7 +35,7 @@ if not vim.g.vscode then
         local actions = require('telescope.actions')
         require("telescope").setup({
           defaults = {
-            prompt_prefix = " " .. require('conf.icons').dap.Stopped[1],
+            prompt_prefix = icons.dap.Stopped[1],
             mappings = {
               i = {
                 ["<esc>"] = actions.close
