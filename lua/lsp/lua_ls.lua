@@ -4,7 +4,10 @@ local lua_settings = {
       globals = { 'vim', } -- disable unused global message
     },
     workspace = {
-      library = { vim.env.VIMRUNTIME },
+      library = {
+        vim.env.VIMRUNTIME,
+        "${3rd}/luv/library"
+      },
     },
   }
 }
