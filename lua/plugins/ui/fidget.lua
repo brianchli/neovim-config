@@ -1,13 +1,6 @@
 if not vim.g.vscode then
   return {
     'j-hui/fidget.nvim',
-    tag = "legacy",
-    event = "LspAttach",
-    config = function()
-      local status, fidget = pcall(require, 'fidget')
-      if status then
-        fidget.setup()
-      end
-    end
+    tag = "v1.6.1", -- Make sure to update this to something recent!  tag = "legacy",
   }
 end
