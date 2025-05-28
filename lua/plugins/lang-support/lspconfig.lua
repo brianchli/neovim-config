@@ -12,8 +12,15 @@ if not vim.g.vscode then
         'williamboman/mason-lspconfig.nvim',
         {
           'mrcjkb/rustaceanvim',
-          version = '^5', -- Recommended
+          dependencies = {
+            'neovim/nvim-lspconfig',
+          },
+          version = '^6', -- Recommended
           lazy = false,   -- This plugin is already lazy
+          init = function()
+            -- Silence the lsp log warning by providing an empty config
+            vim.lsp.config["rust-analyzer"] = {};
+          end
         }
       },
       init = function()
@@ -39,141 +46,138 @@ if not vim.g.vscode then
         };
       end,
       config = function(_, opts)
-        local status, lspconfig = pcall(require, 'lspconfig')
-        if status then
-          local _, navic = pcall(require, 'nvim-navic')
-
-          vim.keymap.set('n', '[d', vim.diagnostic.goto_prev,
-            { noremap = true, silent = true, desc = "goto next diagnostic" })
-          vim.keymap.set('n', ']d', vim.diagnostic.goto_next,
-            { noremap = true, silent = true, desc = "goto prev diagnostic" })
-
-          local on_attach = function(client, bufnr)
-            -- Mappings.
-            -- See `:help vim.lsp.*` for documentation on any of the below functions
-
-            vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references,
-              { noremap = true, silent = true, buffer = bufnr, desc = "goto references" })
-            vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions,
-              { noremap = true, silent = true, buffer = bufnr, desc = "goto definition" })
-            vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
-              { noremap = true, silent = true, buffer = bufnr, desc = "goto declaration" })
-            vim.keymap.set('n', 'gI', require('telescope.builtin').lsp_implementations,
-              { noremap = true, silent = true, buffer = bufnr, desc = "goto implementation" })
-            vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,
-              { noremap = true, silent = true, buffer = bufnr, desc = "signature help" })
-            vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder,
-              { noremap = true, silent = true, buffer = bufnr, desc = "add workspace folder" })
-            vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
-              { noremap = true, silent = true, buffer = bufnr, desc = "remove workspace folder" })
-            vim.keymap.set('n', '<space>wl', function()
-                print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-              end,
-              { noremap = true, silent = true, buffer = bufnr, desc = "list workspace folders" })
-
-            vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
-              { noremap = true, silent = true, buffer = bufnr, desc = "buf type definition" })
-            vim.keymap.set('n', '<space>d', require('telescope.builtin').lsp_document_symbols,
-              { noremap = true, silent = true, buffer = bufnr, desc = "buf document symbols" })
-            vim.keymap.set('n', '<space>ds', require('telescope.builtin').lsp_dynamic_workspace_symbols,
-              { noremap = true, silent = true, buffer = bufnr, desc = "buf document symbols" })
-            vim.keymap.set('n', '<space>rn', function()
-                return ":IncRename " .. vim.fn.expand("<cword>")
-              end,
-              { expr = true, noremap = true, silent = true, buffer = bufnr, desc = "buf rename" })
-            vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action,
-              { noremap = true, silent = true, buffer = bufnr, desc = "code actions" })
-            vim.keymap.set('n', '<space>F', function() vim.lsp.buf.format { async = true } end,
-              { noremap = true, silent = true, buffer = bufnr, desc = "format file" })
-
-            if client.server_capabilities.documentSymbolProvider then
-              navic.attach(client, bufnr)
-            end
-
-
-            local highlight_group = vim.api.nvim_create_augroup("highlight word under cursor", { clear = true })
-            -- highlight word
-            vim.api.nvim_create_autocmd({ "CursorHold" }, {
-              group = highlight_group,
-              buffer = bufnr,
-              callback = function()
-                vim.lsp.buf.document_highlight()
-              end
-            })
-
-            -- clear highlights
-            vim.api.nvim_create_autocmd({ "CursorMoved" }, {
-              group = highlight_group,
-              buffer = bufnr,
-              callback = function()
-                vim.lsp.buf.clear_references()
-              end
-            })
-          end
-
-          local capabilities = vim.tbl_deep_extend("force",
-            vim.lsp.protocol.make_client_capabilities(),
-            require('cmp_nvim_lsp').default_capabilities(),
-            {
-              --offsetEncoding = 'utf-16',
-              update_in_insert = { false },
-              flags = {
-                debounce_text_changes = 150,
-                allow_incremental_sync = true,
-              }
-            }
-          )
-          -- load manual configurations for some language servers
-          -- NOTE: the settings table may differ depending on the lang server
-          for _, path in ipairs(vim.api.nvim_get_runtime_file('lua/lsp/*', true)) do
-            local lang, settings = loadfile(path)()
-            lspconfig[lang].setup({
-              on_attach = on_attach,
-              capabilities = capabilities,
-              settings = settings
-            })
-          end
-
-          local _, clangd = pcall(require, 'clangd_extensions')
-          clangd.setup({
-            server = {
-              on_attach = on_attach,
-              capabilities = capabilities,
-            },
-            inlay_hints = {
-              only_current_line = true,
-              only_current_line_autocmd = {
-                "CursorHold"
-              },
-            }
-          })
-
-          local function configure_lsp(lsp, capabilities)
-            if lsp == 'emmet_ls' then
-              lspconfig[lsp].setup({
-                on_attach = on_attach,
-                capabilities = capabilities,
-                filetypes = { 'javascript', 'typescript', 'astro' }
-              })
-            else
-              lspconfig[lsp].setup({
-                on_attach = on_attach,
-                capabilities = capabilities,
-              })
-            end
-          end
-
-          for _, lsp in ipairs(opts.servers) do
-            configure_lsp(lsp, capabilities)
-          end
-
-          vim.g.rustaceanvim = {
-            server = {
-              on_attach = on_attach
-            }
-          }
+        local tjoin = function(...)
+          return vim.tbl_deep_extend("force", ...)
         end
+
+        local on_attach = function(args)
+          local status, fidget = pcall(require, "fidget")
+          if status then
+            fidget.notify("Custom on attach loaded")
+          else
+            vim.notify("Custom on attach loaded")
+          end
+
+          local telescope = require('telescope.builtin');
+          local opt_def = function(o)
+            return tjoin({ silent = true, buffer = args.buf }, o)
+          end
+
+          vim.keymap.set('n', 'gr', telescope.lsp_references
+          , opt_def({ desc = "goto references" })
+          )
+
+          vim.keymap.set('n', 'gd', telescope.lsp_definitions,
+            opt_def({ desc = "goto definition" }))
+
+          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
+            opt_def({ desc = "goto declaration" }))
+
+          vim.keymap.set('n', 'gI', telescope.lsp_implementations,
+            opt_def({ desc = "goto implementation" }))
+
+          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,
+            opt_def({ desc = "signature help" }))
+
+          vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder,
+            opt_def({ desc = "add workspace folder" }))
+
+          vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
+            opt_def({ desc = "remove workspace folder" }))
+
+          vim.keymap.set('n', '<space>wl', function()
+              print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+            end,
+            opt_def({ desc = "list workspace folders" }))
+
+          vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
+            opt_def({ desc = "buf type definition" }))
+
+          vim.keymap.set('n', '<space>d', telescope.lsp_document_symbols,
+            opt_def({ desc = "buf document symbols" }))
+
+          vim.keymap.set('n', '<space>ds', telescope.lsp_dynamic_workspace_symbols,
+            opt_def({ desc = "buf document symbols" }))
+
+          vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action,
+            opt_def({ desc = "code actions" }))
+
+          vim.keymap.set('n', '<space>F',
+            function() vim.lsp.buf.format { async = true } end,
+            opt_def({ desc = "format file" }))
+        end
+
+        -- Diagnostic configurations
+        local diag = vim.diagnostic.severity
+        -- Redefine signs for all diagnostics
+        vim.diagnostic.config({
+          signs = {
+            text = {
+              [diag.ERROR] = "●",
+              [diag.WARN] = "●",
+              [diag.HINT] = "●",
+              [diag.INFO] = "●",
+            }
+          },
+          -- jump to diagnostics using [d and ]d
+          jump = { float = true },
+
+          -- do the following for lsp diagnostics:
+          -- 1. disable prefix (e.g. number)
+          -- 2. sort from the highest severity
+          -- 3. include the source where the warn/error come from
+          float = { prefix = "", header = "", severity_sort = true, source = true },
+        })
+
+
+        -- General lsp settings
+
+        -- enable inlay hints
+        vim.lsp.inlay_hint.enable(true, { 0 })
+
+        local capabilities = tjoin(
+          vim.lsp.protocol.make_client_capabilities(),
+          require('cmp_nvim_lsp').default_capabilities()
+        )
+
+        -- Configurations defined in nvim/lsp
+        local custom_configurations = { "lua_ls", "ruff" };
+        for _, lsp in ipairs(custom_configurations) do
+          vim.lsp.enable(lsp)
+          vim.lsp.config[lsp].capabilities = capabilities
+        end
+
+        for _, lsp in ipairs(opts.servers) do
+          vim.lsp.enable(lsp)
+          vim.lsp.config[lsp].capabilities = capabilities
+        end
+
+        vim.api.nvim_create_autocmd('LspAttach', {
+          callback = on_attach,
+        })
+
+        local _, clangd = pcall(require, 'clangd_extensions')
+        clangd.setup({
+          server = {
+            on_attach = on_attach,
+            capabilities = tjoin(capabilities,
+              {
+                update_in_insert = { false },
+                flags = {
+                  debounce_text_changes = 150,
+                  allow_incremental_sync = true,
+                }
+              })
+          },
+          inlay_hints = {
+            only_current_line = true,
+            only_current_line_autocmd = {
+              "CursorHold"
+            },
+          }
+        })
       end
+
     },
     {
       'nvimtools/none-ls.nvim',

@@ -23,8 +23,12 @@ if not vim.g.vscode then
     },
     -- set up lsp integration with mason
     {
-      'williamboman/mason-lspconfig.nvim',
+      "mason-org/mason-lspconfig.nvim",
       priority = 970,
+      dependencies = {
+        { "mason-org/mason.nvim", opts = {} },
+        "neovim/nvim-lspconfig",
+      },
       opts = {
         ensure_installed = {
           "ruff",
@@ -43,6 +47,7 @@ if not vim.g.vscode then
           "jsonls",
         },
         automatic_installation = true,
+        automatic_enable = false
       }
     },
     -- auto updates language server protocols installed via mason

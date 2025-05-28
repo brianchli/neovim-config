@@ -10,12 +10,6 @@ if not vim.g.vscode then
   vim.g.mapleader = ' '
   vim.g.localleader = '\\'
 
-  -- change diagnostic signs for warnings
-  cmd "sign define DiagnosticSignError text=● texthl=DiagnosticSignError"
-  cmd "sign define DiagnosticSignWarn text=● texthl=DiagnosticSignWarn"
-  cmd "sign define DiagnosticSignInfo text=● texthl=DiagnosticSignInfo"
-  cmd "sign define DiagnosticSignHint text=● texthl=DiagnosticSignHint"
-
   require('opts')      -- options
   require('keymaps')   -- key mappings
   require('autofuncs') -- functions and autocmds
