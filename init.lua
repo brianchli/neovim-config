@@ -6,7 +6,6 @@ if not vim.g.vscode then
   --│                                                          │
   --╰──────────────────────────────────────────────────────────╯
 
-  local cmd = vim.cmd
   vim.g.mapleader = ' '
   vim.g.localleader = '\\'
 
