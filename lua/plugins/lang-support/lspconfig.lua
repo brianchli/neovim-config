@@ -46,10 +46,6 @@ if not vim.g.vscode then
         };
       end,
       config = function(_, opts)
-        local tjoin = function(...)
-          return vim.tbl_deep_extend("force", ...)
-        end
-
         local on_attach = function(args)
           local status, fidget = pcall(require, "fidget")
           if status then
@@ -60,7 +56,7 @@ if not vim.g.vscode then
 
           local telescope = require('telescope.builtin');
           local opt_def = function(o)
-            return tjoin({ silent = true, buffer = args.buf }, o)
+            return _G.utils.tjoin({ silent = true, buffer = args.buf }, o)
           end
 
           vim.keymap.set('n', 'gr', telescope.lsp_references
@@ -135,7 +131,7 @@ if not vim.g.vscode then
         -- enable inlay hints
         vim.lsp.inlay_hint.enable(true, { 0 })
 
-        local capabilities = tjoin(
+        local capabilities = _G.utils.tjoin(
           vim.lsp.protocol.make_client_capabilities(),
           require('cmp_nvim_lsp').default_capabilities()
         )
@@ -160,7 +156,7 @@ if not vim.g.vscode then
         clangd.setup({
           server = {
             on_attach = on_attach,
-            capabilities = tjoin(capabilities,
+            capabilities = _G.utils.tjoin(capabilities,
               {
                 update_in_insert = { false },
                 flags = {

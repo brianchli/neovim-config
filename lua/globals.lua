@@ -55,3 +55,9 @@ _G.icons = {
     Variable = " ",
   },
 }
+
+local tjoin = function(...)
+  return vim.tbl_deep_extend("force", ...)
+end
+
+_G.utils = { tjoin = tjoin }
