@@ -137,7 +137,7 @@ if not vim.g.vscode then
         )
 
         -- Configurations defined in nvim/lsp
-        local custom_configurations = { "lua_ls", "ruff" };
+        local custom_configurations = { "lua_ls", "ruff", "pylsp" };
         for _, lsp in ipairs(custom_configurations) do
           vim.lsp.enable(lsp)
           vim.lsp.config[lsp].capabilities = capabilities
