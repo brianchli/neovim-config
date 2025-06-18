@@ -101,6 +101,10 @@ if not vim.g.vscode then
           vim.keymap.set('n', '<space>F',
             function() vim.lsp.buf.format { async = true } end,
             opt_def({ desc = "format file" }))
+
+          vim.keymap.set('n', '<space>ti',
+            function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ 0 }), { 0 }) end,
+            opt_def({ desc = "toggle inlay hints" }))
         end
 
         -- Diagnostic configurations
@@ -164,12 +168,6 @@ if not vim.g.vscode then
                   allow_incremental_sync = true,
                 }
               })
-          },
-          inlay_hints = {
-            only_current_line = true,
-            only_current_line_autocmd = {
-              "CursorHold"
-            },
           }
         })
       end
