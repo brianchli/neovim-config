@@ -28,40 +28,84 @@ if not vim.g.vscode then
       priority = 980,
       build = ":TSUpdate",
       lazy = false,
+      dependencies = {
+        'windwp/nvim-ts-autotag',                     -- for autotagging
+        'nvim-treesitter/nvim-treesitter-textobjects' -- for textobjects
+      },
       config = function()
-        require('nvim-treesitter.configs').setup(
-          {
-            ensure_installed = {
-              "bash",
-              "css",
-              "html",
-              "make",
-              "cmake",
-              "python",
-              "cpp",
-              "yaml",
-              "regex",
-              "javascript",
-              "typescript",
-              "toml",
-              "rust",
-              "zig",
-              "haskell",
-              "vim",
-              "vimdoc"
-            },
+        ---@diagnostic disable-next-line: missing-fields
+        require('nvim-treesitter.configs').setup({
+          ensure_installed = {
+            "bash",
+            "css",
+            "html",
+            "make",
+            "cmake",
+            "python",
+            "cpp",
+            "yaml",
+            "regex",
+            "javascript",
+            "typescript",
+            "toml",
+            "rust",
+            "zig",
+            "haskell",
+            "vim",
+            "vimdoc",
+            "lua",
+            "json",
+            "tsx"
+          },
 
-            highlight = {
-              enable = true
+          highlight = {
+            enable = true,
+          },
+
+          indent = {
+            enable = true,
+          },
+
+          incremental_selection = {
+            enable = true,
+            keymaps = {
+              init_selection = "gnn",
+              node_incremental = "grn",
+              scope_incremental = "grc",
+              node_decremental = "grm",
             },
-            indent = {
-              enable = true
+          },
+
+          autotag = {
+            enable = true,
+          },
+
+          textobjects = {
+            select = {
+              enable = true,
+              lookahead = true,
+              keymaps = {
+                ["af"] = "@function.outer",
+                ["if"] = "@function.inner",
+                ["ac"] = "@class.outer",
+                ["ic"] = "@class.inner",
+              },
             },
-            incremental_selection = {
-              enabled = true
-            }
-          })
-      end
+            move = {
+              enable = true,
+              set_jumps = true,
+              goto_next_start = {
+                ["]m"] = "@function.outer",
+                ["]]"] = "@class.outer",
+              },
+              goto_previous_start = {
+                ["[m"] = "@function.outer",
+                ["[["] = "@class.outer",
+              },
+            },
+          },
+        })
+      end,
     },
     -- set up git signs
     {
