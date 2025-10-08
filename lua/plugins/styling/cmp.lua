@@ -2,17 +2,15 @@ if not vim.g.vscode then
   return {
     'hrsh7th/nvim-cmp',
     dependencies = {
-      'L3MON4D3/LuaSnip',
+      { 'L3MON4D3/LuaSnip', version = "v2.*" },
       'saadparwaiz1/cmp_luasnip',
       'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-path',
+      'FelipeLema/cmp-async-path',
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-nvim-lua',
       'amarakon/nvim-cmp-buffer-lines',
       'rafamadriz/friendly-snippets',
-      'f3fora/cmp-spell',
       'onsails/lspkind-nvim',
-      'p00f/clangd_extensions.nvim',
       'windwp/nvim-autopairs',
       'petertriho/cmp-git',
     },
@@ -34,7 +32,6 @@ if not vim.g.vscode then
       if status then
         lspkind.init()
         cmp.setup({
-          preselect = cmp.PreselectMode.None,
           snippet = {
             expand = function(args)
               ls.lsp_expand(args.body)
@@ -44,19 +41,10 @@ if not vim.g.vscode then
             { name = 'nvim_lsp' },
             { name = 'luasnip' },
             { name = 'nvim_lua' },
-            { name = 'path' },
+            { name = 'async_path' },
             { name = 'buffer' },
-            {
-              name = "spell",
-              option = {
-                keep_all_entries = false,
-                enable_in_context = function()
-                  return true
-                end,
-                preselect_correct_word = true,
-              },
-            },
           }),
+
           mapping = cmp.mapping.preset.insert({
             ['<C-h>'] = cmp.mapping.scroll_docs(-4),
             ['<C-l>'] = cmp.mapping.scroll_docs(4),
@@ -75,13 +63,12 @@ if not vim.g.vscode then
               end
             end, { 'i', 's' }),
           }),
-          matching = {
-            disallow_partial_fuzzy_matching = false,
-          },
+
           window = {
             completion = cmp.config.window.bordered(),
             documentation = cmp.config.window.bordered(),
           },
+
           formatting = {
             format = lspkind.cmp_format {
               default = true,
@@ -109,7 +96,7 @@ if not vim.g.vscode then
           })
         })
 
-        require("cmp_git").setup()
+        require("cmp_git").setup({})
 
         require("luasnip.loaders.from_vscode").lazy_load()
       end

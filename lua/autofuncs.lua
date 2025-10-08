@@ -62,14 +62,7 @@ api.nvim_create_autocmd("CursorHold", {
   callback = function()
     local opts = {
       focusable = false,
-      close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-      style = 'minimal',
-      source = 'always',
-      max_width = 200,
-      title = 'test',
-      pad_top = 0.1,
-      pad_bottom = 1,
-      scope = 'cursor',
+      scope = 'l',
     }
     vim.diagnostic.open_float(nil, opts)
   end,
@@ -132,4 +125,29 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
   group = augroup("checktime"),
   command = "checktime",
+})
+
+-- remove nvim opts for scratch buffers (mainly used by plugins)
+vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+  group = augroup("scratch_buffer_options"),
+  callback = function(ev)
+    local bt = vim.bo[ev.buf].buftype
+    local ft = vim.bo[ev.buf].filetype
+
+    -- scratch buffers to ignore:
+    if bt == "nofile"
+        or bt == "prompt"
+        or bt == "help"
+        or bt == "quickfix"
+        or ft == "TelescopePrompt"
+        or ft == "NvimTree"
+        or ft == "Trouble"
+        or ft == "aerial"
+    then
+      local win = vim.fn.bufwinid(ev.buf)
+      if win ~= -1 then
+        vim.wo[win].statusline = " " -- affects only the current window
+      end
+    end
+  end,
 })

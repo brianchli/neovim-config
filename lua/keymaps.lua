@@ -64,3 +64,15 @@ map('n', '<leader>lr', function()
     vim.wo.cursorline = true
   end
 end, { noremap = true, silent = true, desc = "toggle line highlight" })
+
+-- close all other buffers and conditionally save current
+map("n", "ZZ", function()
+  local curr_buf = vim.api.nvim_get_current_buf()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if buf ~= curr_buf then
+      vim.api.nvim_buf_delete(buf, { force = true })
+    end
+  end
+  vim.cmd(":x")
+end, { noremap = true, silent = true })
+

@@ -1,6 +1,6 @@
 if not vim.g.vscode then
   return {
-    -- color scheme
+    -- colorscheme
     loadfile(vim.fn.stdpath('config') .. '/lua/colorscheme/nordic.lua')(),
     {
       {
@@ -29,6 +29,7 @@ if not vim.g.vscode then
       'nvim-treesitter/nvim-treesitter',
       priority = 980,
       build = ":TSUpdate",
+      lazy = false,
       config = function()
         require('nvim-treesitter.configs').setup(
           {

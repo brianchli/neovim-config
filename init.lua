@@ -37,6 +37,7 @@ if not vim.g.vscode then
         { import = 'plugins.navigation' },
         { import = 'plugins.extras' },
         { import = 'plugins.diagnostics' },
+        { import = 'plugins.file' },
       },
       checker = {
         enabled = true,
@@ -47,4 +48,7 @@ if not vim.g.vscode then
       }
     })
   end
+
+  require("ui.statusline")
+
 end

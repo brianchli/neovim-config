@@ -30,7 +30,7 @@ vim.opt.updatetime = 150
 -- [[ Context ]]
 vim.opt.number = true         -- Show line numbers
 vim.opt.signcolumn = "yes"    -- Show the sign column
-vim.opt.laststatus = 2        -- Always show status line
+vim.opt.laststatus = 3        -- Always show status line
 vim.opt.scrolloff = 4         -- Min num lines of context
 
 -- [[ Filetypes ]]
@@ -75,6 +75,7 @@ vim.opt.wildmode = "longest,list"
 vim.opt.cc = '88'
 
 vim.opt.spell = true
+vim.opt.spelllang = "en_au"
 vim.opt.swapfile = false
 
 vim.opt.report = 1   -- print messages from commands
@@ -86,3 +87,6 @@ vim.opt.linebreak = true      -- Wrap on word boundary
 vim.opt.numberwidth = 5       -- minimal number of columns to use for the line number {default 4}
 vim.opt.sidescrolloff = 8     -- minimal number of screen columns to keep to the left and right of the cursor if wrap is `false`
 vim.opt.iskeyword:append("-") -- treats words with `-` as single words
+
+vim.opt.list = true
+vim.opt.listchars = { tab = '  ', trail = '·' }

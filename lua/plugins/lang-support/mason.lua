@@ -45,6 +45,8 @@ if not vim.g.vscode then
           "zls",
           "texlab",
           "jsonls",
+          "marksman",
+          "harper_ls",
         },
         automatic_installation = true,
         automatic_enable = false
@@ -77,6 +79,8 @@ if not vim.g.vscode then
             -- "prettier",
             "prettierd",
             "pylsp",
+            "marksman",
+            "harper_ls",
           },
           auto_update = true,
 

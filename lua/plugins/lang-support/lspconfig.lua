@@ -1,4 +1,20 @@
 if not vim.g.vscode then
+  local map = vim.keymap.set
+  -- Taken from:
+  -- https://github.com/adibhanna/minimal-vim/blob/5cd34cc07c242b880d0cf74b14e08cd66ee6804e/lua/config/autocmds.lua#L36
+  local function client_supports_method(client, method, bufnr)
+    if vim.fn.has 'nvim-0.11' == 1 then
+      return client:supports_method(method, bufnr)
+    else
+      return client.supports_method(method, { bufnr = bufnr })
+    end
+  end
+
+  local opt_def = function(o, ...)
+    return _G.utils.tjoin({ silent = true, buffer = ... }, o)
+  end
+
+
   return {
     {
       'neovim/nvim-lspconfig',
@@ -42,6 +58,7 @@ if not vim.g.vscode then
             'zls',
             'texlab',
             'clangd',
+            "marksman",
           }
         };
       end,
@@ -55,56 +72,115 @@ if not vim.g.vscode then
           end
 
           local telescope = require('telescope.builtin');
-          local opt_def = function(o)
-            return _G.utils.tjoin({ silent = true, buffer = args.buf }, o)
+          map('n', 'gr', telescope.lsp_references, opt_def({ desc = "goto references" }))
+          map('n', 'gd', telescope.lsp_definitions, opt_def({ desc = "goto definition" }))
+          map('n', 'gD', vim.lsp.buf.declaration, opt_def({ desc = "goto declaration" }))
+          map('n', 'gI', telescope.lsp_implementations, opt_def({ desc = "goto implementation" }))
+          map('n', '<C-k>', vim.lsp.buf.signature_help, opt_def({ desc = "signature help" }))
+          map('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opt_def({ desc = "add workspace folder" }))
+          map('n', '<space>D', vim.lsp.buf.type_definition, opt_def({ desc = "buf type definition" }))
+          map('n', '<space>d', telescope.lsp_document_symbols, opt_def({ desc = "buf document symbols" }))
+          map('n', '<space>ds', telescope.lsp_dynamic_workspace_symbols, opt_def({ desc = "buf workspace symbols" }))
+          map('n', '<space>ca', vim.lsp.buf.code_action, opt_def({ desc = "code actions" }))
+          map('n', '<leader>rn', vim.lsp.buf.rename, opt_def({ desc = 'LSP Rename' }))
+          map('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
+            opt_def({ desc = "remove workspace folder" }))
+          map('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+            opt_def({ desc = "list workspace folders" }))
+          map('n', '<space>F', function() vim.lsp.buf.format { async = true } end,
+            opt_def({ desc = "format file" }))
+          map('n', '<space>ti', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ 0 }), { 0 }) end,
+            opt_def({ desc = "toggle inlay hints" }))
+
+
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client_supports_method(client, 'textDocument/documentHighlight', args.buf) then
+            -- update colors to differentiate
+            vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = "#3c3836", bold = true })
+            vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = "#3c3836", bold = true })
+
+            local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
+
+            -- When cursor stops moving: Highlightsall instances of the symbol under the cursor
+            -- When cursor moves: Clears the highlighting
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+              buffer = args.buf,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.document_highlight,
+            })
+
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+              buffer = args.buf,
+              group = highlight_augroup,
+              callback = vim.lsp.buf.clear_references,
+            })
+
+            -- When LSP detaches: Clears the highlighting
+            vim.api.nvim_create_autocmd('LspDetach', {
+              group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
+              callback = function(event2)
+                vim.lsp.buf.clear_references()
+                vim.api.nvim_clear_autocmds { group = 'lsp-highlight', buffer = event2.buf }
+              end,
+            })
           end
 
-          vim.keymap.set('n', 'gr', telescope.lsp_references
-          , opt_def({ desc = "goto references" })
-          )
 
-          vim.keymap.set('n', 'gd', telescope.lsp_definitions,
-            opt_def({ desc = "goto definition" }))
+          -- Taken from:
+          -- https://github.com/adibhanna/minimal-vim/blob/5cd34cc07c242b880d0cf74b14e08cd66ee6804e/lua/config/autocmds.lua#L36
+          if client and client_supports_method(client, 'textDocument/inlayHint', args.buf) then
+            local original_handler = client.rpc.request;
 
-          vim.keymap.set('n', 'gD', vim.lsp.buf.declaration,
-            opt_def({ desc = "goto declaration" }))
+            local inlay_hint_group = vim.api.nvim_create_augroup('lsp-inlay-hint', { clear = false })
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+              buffer = args.buf,
+              group = inlay_hint_group,
+              callback = function()
+                if not vim.lsp.inlay_hint.is_enabled({ 0 }) then
+                  vim.lsp.inlay_hint.enable(true, { 0 })
+                end
+              end,
+            })
 
-          vim.keymap.set('n', 'gI', telescope.lsp_implementations,
-            opt_def({ desc = "goto implementation" }))
+            local last_line = nil;
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+              buffer = args.buf,
+              group = inlay_hint_group,
+              callback = function()
+                local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+                if last_line ~= nil and last_line == cursor_line then
+                  return
+                end
+                if vim.lsp.inlay_hint.is_enabled({ 0 }) then
+                  vim.lsp.inlay_hint.enable(false, { 0 })
+                end
+              end,
+            })
 
-          vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help,
-            opt_def({ desc = "signature help" }))
+            vim.api.nvim_create_autocmd('LspDetach', {
+              group = vim.api.nvim_create_augroup('lsp-inlay-hint-detach', { clear = true }),
+              callback = function(event2)
+                vim.api.nvim_clear_autocmds { group = 'lsp-inlay-hint', buffer = event2.buf }
+              end,
+            })
 
-          vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder,
-            opt_def({ desc = "add workspace folder" }))
+            client.rpc.request = function(methods, params, handler, ...)
+              if methods ~= 'textDocument/inlayHint' then
+                return original_handler(methods, params, handler, ...)
+              end
 
-          vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
-            opt_def({ desc = "remove workspace folder" }))
+              local decorator = function(err, ok)
+                local cursor_line = vim.api.nvim_win_get_cursor(0)[1] - 1
+                last_line = cursor_line
+                local filtered = vim.tbl_filter(function(hint)
+                  return hint.position.line == cursor_line
+                end, ok or {})
+                return handler(err, filtered)
+              end
 
-          vim.keymap.set('n', '<space>wl', function()
-              print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-            end,
-            opt_def({ desc = "list workspace folders" }))
-
-          vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition,
-            opt_def({ desc = "buf type definition" }))
-
-          vim.keymap.set('n', '<space>d', telescope.lsp_document_symbols,
-            opt_def({ desc = "buf document symbols" }))
-
-          vim.keymap.set('n', '<space>ds', telescope.lsp_dynamic_workspace_symbols,
-            opt_def({ desc = "buf document symbols" }))
-
-          vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action,
-            opt_def({ desc = "code actions" }))
-
-          vim.keymap.set('n', '<space>F',
-            function() vim.lsp.buf.format { async = true } end,
-            opt_def({ desc = "format file" }))
-
-          vim.keymap.set('n', '<space>ti',
-            function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ 0 }), { 0 }) end,
-            opt_def({ desc = "toggle inlay hints" }))
+              return original_handler(methods, params, decorator, ...)
+            end
+          end
         end
 
         -- Diagnostic configurations
@@ -141,7 +217,7 @@ if not vim.g.vscode then
         )
 
         -- Configurations defined in nvim/lsp
-        local custom_configurations = { "lua_ls", "ruff", "pylsp" };
+        local custom_configurations = { "lua_ls", "ruff", "pylsp", };
         for _, lsp in ipairs(custom_configurations) do
           vim.lsp.enable(lsp)
           vim.lsp.config[lsp].capabilities = capabilities
@@ -156,34 +232,9 @@ if not vim.g.vscode then
           callback = on_attach,
         })
 
-        local _, clangd = pcall(require, 'clangd_extensions')
-        clangd.setup({
-          server = {
-            on_attach = on_attach,
-            capabilities = _G.utils.tjoin(capabilities,
-              {
-                update_in_insert = { false },
-                flags = {
-                  debounce_text_changes = 150,
-                  allow_incremental_sync = true,
-                }
-              })
-          }
-        })
+        -- local _, _ = pcall(require, 'clangd_extensions')
       end
 
-    },
-    {
-      'nvimtools/none-ls.nvim',
-      priority = 900,
-      config = function()
-        local null_ls = require("null-ls")
-        null_ls.setup({
-          sources = {
-            null_ls.builtins.code_actions.proselint,
-          },
-        })
-      end
     },
   }
 end
