@@ -313,7 +313,7 @@ M.render = function()
   stl_parts["fileinfo"] = get_fileinfo_widget(hl_ui_icons)
   stl_parts["scrollbar"] = get_scrollbar()
   stl_parts["rec"] = vim.fn.reg_recording()
-  local c, r = unpack(vim.api.nvim_win_get_cursor(0))
+  local c, r = table.unpack(vim.api.nvim_win_get_cursor(0))
   stl_parts["cursor_pos"]  = c .. "," ..  r
 
   -- turn all of these pieces into one string

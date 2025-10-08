@@ -96,8 +96,8 @@ if not vim.g.vscode then
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client and client_supports_method(client, 'textDocument/documentHighlight', args.buf) then
             -- update colors to differentiate
-            vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = "#3c3836", bold = true })
-            vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = "#3c3836", bold = true })
+            vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "StatusLine", bold = true })
+            vim.api.nvim_set_hl(0, "LspReferenceWrite", { link = "StatusLine", bold = true })
 
             local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
 

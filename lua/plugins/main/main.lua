@@ -1,7 +1,5 @@
 if not vim.g.vscode then
   return {
-    -- colorscheme
-    loadfile(vim.fn.stdpath('config') .. '/lua/colorscheme/nordic.lua')(),
     {
       {
         "folke/lazydev.nvim",
