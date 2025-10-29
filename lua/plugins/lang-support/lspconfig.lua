@@ -72,28 +72,76 @@ if not vim.g.vscode then
           end
 
           local telescope = require('telescope.builtin');
-          map('n', 'gr', telescope.lsp_references, opt_def({ desc = "goto references" }))
-          map('n', 'gd', telescope.lsp_definitions, opt_def({ desc = "goto definition" }))
-          map('n', 'gD', vim.lsp.buf.declaration, opt_def({ desc = "goto declaration" }))
-          map('n', 'gI', telescope.lsp_implementations, opt_def({ desc = "goto implementation" }))
-          map('n', '<C-k>', vim.lsp.buf.signature_help, opt_def({ desc = "signature help" }))
-          map('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opt_def({ desc = "add workspace folder" }))
-          map('n', '<space>D', vim.lsp.buf.type_definition, opt_def({ desc = "buf type definition" }))
-          map('n', '<space>d', telescope.lsp_document_symbols, opt_def({ desc = "buf document symbols" }))
-          map('n', '<space>ds', telescope.lsp_dynamic_workspace_symbols, opt_def({ desc = "buf workspace symbols" }))
-          map('n', '<space>ca', vim.lsp.buf.code_action, opt_def({ desc = "code actions" }))
-          map('n', '<leader>rn', vim.lsp.buf.rename, opt_def({ desc = 'LSP Rename' }))
-          map('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
-            opt_def({ desc = "remove workspace folder" }))
-          map('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
-            opt_def({ desc = "list workspace folders" }))
-          map('n', '<space>F', function() vim.lsp.buf.format { async = true } end,
-            opt_def({ desc = "format file" }))
-          map('n', '<space>ti', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ 0 }), { 0 }) end,
-            opt_def({ desc = "toggle inlay hints" }))
-
-
           local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+          -- References / Definitions / Declarations / Implementations
+          if client and client_supports_method(client, 'textDocument/references') then
+            map('n', 'gr', telescope.lsp_references, opt_def({ desc = "goto references" }))
+          end
+
+          if client and client_supports_method(client, 'textDocument/definition') then
+            map('n', 'gd', telescope.lsp_definitions, opt_def({ desc = "goto definition" }))
+          end
+
+          if client and client_supports_method(client, 'textDocument/declaration') then
+            map('n', 'gD', vim.lsp.buf.declaration, opt_def({ desc = "goto declaration" }))
+          end
+
+          if client and client_supports_method(client, 'textDocument/implementation') then
+            map('n', 'gI', telescope.lsp_implementations, opt_def({ desc = "goto implementation" }))
+          end
+
+          -- Signature help
+          if client and client_supports_method(client, 'textDocument/signatureHelp') then
+            map('n', '<C-k>', vim.lsp.buf.signature_help, opt_def({ desc = "signature help" }))
+          end
+
+          -- Type definitions
+          if client and client_supports_method(client, 'textDocument/typeDefinition') then
+            map('n', '<space>D', vim.lsp.buf.type_definition, opt_def({ desc = "buf type definition" }))
+          end
+
+          -- Document / Workspace symbols
+          if client and client_supports_method(client, 'textDocument/documentSymbol') then
+            map('n', '<space>d', telescope.lsp_document_symbols, opt_def({ desc = "buf document symbols" }))
+          end
+
+          if client and client_supports_method(client, 'workspace/symbol') then
+            map('n', '<space>ds', telescope.lsp_dynamic_workspace_symbols, opt_def({ desc = "buf workspace symbols" }))
+          end
+
+          -- Code actions / Rename
+          if client and client_supports_method(client, 'textDocument/codeAction') then
+            map('n', '<space>ca', vim.lsp.buf.code_action, opt_def({ desc = "code actions" }))
+          end
+
+          if client and client_supports_method(client, 'textDocument/rename') then
+            map('n', '<leader>rn', vim.lsp.buf.rename, opt_def({ desc = 'LSP Rename' }))
+          end
+
+          -- Formatting
+          if client and client_supports_method(client, 'textDocument/formatting') then
+            map('n', '<space>F', function() vim.lsp.buf.format { async = true } end,
+              opt_def({ desc = "format file" }))
+          end
+
+          -- Inlay hints
+          if client and client_supports_method(client, 'textDocument/inlayHint') then
+            map('n', '<space>ti', function()
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ 0 }), { 0 })
+            end, opt_def({ desc = "toggle inlay hints" }))
+          end
+
+          -- Workspace folder operations (server must support workspaceFolders)
+          if client and client.server_capabilities.workspace then
+            map('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opt_def({ desc = "add workspace folder" }))
+            map('n', '<space>wr', vim.lsp.buf.remove_workspace_folder,
+              opt_def({ desc = "remove workspace folder" }))
+            map('n', '<space>wl', function() print(vim.inspect(vim.lsp.buf.list_workspace_folders())) end,
+              opt_def({ desc = "list workspace folders" }))
+          end
+
+
           if client and client_supports_method(client, 'textDocument/documentHighlight', args.buf) then
             -- update colors to differentiate
             vim.api.nvim_set_hl(0, "LspReferenceRead", { link = "StatusLine", bold = true })
