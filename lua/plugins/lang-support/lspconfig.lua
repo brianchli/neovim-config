@@ -55,7 +55,6 @@ if not vim.g.vscode then
             'yamlls',
             'astro',
             'jsonls',
-            'zls',
             'texlab',
             'clangd',
             "marksman",
