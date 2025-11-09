@@ -5,7 +5,7 @@ if not vim.g.vscode then
       'williamboman/mason.nvim',
       priority = 980,
       keys = {
-        { "<leader>m", "<cmd>Mason<cr>", desc = "open mason" },
+        { "<leader>M", "<cmd>Mason<cr>", desc = "open mason" },
       },
       config = function()
         -- enable mason and configure icons
