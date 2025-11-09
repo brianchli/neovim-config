@@ -35,7 +35,7 @@ if not vim.g.vscode then
         { import = 'plugins.lang-support' },
         { import = 'plugins.styling' },
         { import = 'plugins.navigation' },
-        { import = 'plugins.extras' },
+        { import = 'plugins.qol' },
         { import = 'plugins.diagnostics' },
         { import = 'plugins.file' },
       },
