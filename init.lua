@@ -49,6 +49,7 @@ if not vim.g.vscode then
     })
   end
 
+  vim.cmd.colorscheme("nordic")
   require("ui.statusline")
 
 end
