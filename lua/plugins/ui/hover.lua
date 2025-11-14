@@ -4,7 +4,7 @@ if not vim.g.vscode then
     config = function()
       local status, hover = pcall(require, 'hover')
       if status then
-        hover.setup {
+        hover.config {
           init = function()
             -- Require providers
             require("hover.providers.lsp")
