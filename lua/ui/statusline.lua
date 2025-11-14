@@ -105,8 +105,8 @@ end
 
 local function get_partial_path_of_len_n(parts, n)
   return #parts >= n and
-      "~/../" .. table.concat(parts, "/", #parts - n + 1) .. "/"
-      or "~/../" .. table.concat(parts, "/") .. "/"
+      " ~/../" .. table.concat(parts, "/", #parts - n + 1) .. "/"
+      or " ~/../" .. table.concat(parts, "/") .. "/"
 end
 
 
@@ -271,7 +271,6 @@ local function get_scrollbar()
 
   local i = math.floor((cur_line - 1) / lines * #sbar_chars) + 1
   local sbar = string.rep(sbar_chars[i], 4)
-  -- return tools.hl_str("Substitute", sbar)
   return tools.hl_str("StatusLine", sbar)
 end
 
