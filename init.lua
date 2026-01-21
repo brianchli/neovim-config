@@ -45,11 +45,12 @@ if not vim.g.vscode then
       },
       change_detection = {
         notify = false
-      }
+      },
+      install = { colorscheme = { "nordic" } },
     })
   end
 
   vim.cmd.colorscheme("nordic")
   require("ui.statusline")
-
+  require("ui.winbar")
 end
