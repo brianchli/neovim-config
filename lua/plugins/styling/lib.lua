@@ -3,31 +3,33 @@ if not vim.g.vscode then
     {
       'echasnovski/mini.surround',
       version = false,
-      config = function()
-        require("mini.surround").setup()
-      end
+      lazy = true,
+      opts = {}
     },
     {
       'echasnovski/mini.comment',
       version = false,
-      config = function()
-        require('mini.comment').setup()
-      end
+      lazy = true,
+      opts = {}
     },
     {
       'echasnovski/mini.trailspace',
       version = false,
-      config = function()
-        require('mini.trailspace').setup()
-      end
+      lazy = true,
+      opts = {}
     },
     {
       'echasnovski/mini.icons',
       version = '*',
-      config = function()
-        require('mini.icons').setup()
-      end
+      lazy = true,
+      opts = {}
     },
+    {
+      'windwp/nvim-autopairs',
+      event = "InsertEnter",
+      lazy = true,
+      opts = {}
+    }
 
   }
 end

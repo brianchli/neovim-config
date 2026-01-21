@@ -16,30 +16,12 @@ if not vim.g.vscode then
 
   --- @param args vim.api.keyset.create_autocmd.callback_args
   local on_attach = function(args)
-    local telescope = require('telescope.builtin');
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     if client == nil then
       return
     end
 
     require("fidget").notify(client.name .. " attached")
-
-    -- References / Definitions / Declarations / Implementations
-    if client and client_supports_method(client, 'textDocument/references') then
-      map('n', 'gr', telescope.lsp_references, opt_def({ desc = "goto references" }))
-    end
-
-    if client and client_supports_method(client, 'textDocument/definition') then
-      map('n', 'gd', telescope.lsp_definitions, opt_def({ desc = "goto definition" }))
-    end
-
-    if client and client_supports_method(client, 'textDocument/declaration') then
-      map('n', 'gD', vim.lsp.buf.declaration, opt_def({ desc = "goto declaration" }))
-    end
-
-    if client and client_supports_method(client, 'textDocument/implementation') then
-      map('n', 'gI', telescope.lsp_implementations, opt_def({ desc = "goto implementation" }))
-    end
 
     -- Signature help
     if client and client_supports_method(client, 'textDocument/signatureHelp') then
@@ -54,11 +36,6 @@ if not vim.g.vscode then
     -- Document / Workspace symbols
     if client and client_supports_method(client, 'textDocument/documentSymbol') then
       require("nvim-navic").attach(client, args.buf)
-      map('n', '<space>d', telescope.lsp_document_symbols, opt_def({ desc = "buf document symbols" }))
-    end
-
-    if client and client_supports_method(client, 'workspace/symbol') then
-      map('n', '<space>ds', telescope.lsp_dynamic_workspace_symbols, opt_def({ desc = "buf workspace symbols" }))
     end
 
     -- Code actions / Rename
@@ -74,13 +51,6 @@ if not vim.g.vscode then
     if client and client_supports_method(client, 'textDocument/formatting') then
       map('n', '<space>F', function() vim.lsp.buf.format { async = true } end,
         opt_def({ desc = "format file" }))
-    end
-
-    -- Inlay hints
-    if client and client_supports_method(client, 'textDocument/inlayHint') then
-      map('n', '<space>ti', function()
-        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled({ 0 }), { 0 })
-      end, opt_def({ desc = "toggle inlay hints" }))
     end
 
     -- Workspace folder operations (server must support workspaceFolders)
@@ -181,6 +151,7 @@ if not vim.g.vscode then
   return {
     {
       'SmiteshP/nvim-navic',
+      lazy = true,
       dependencies = {
         'neovim/nvim-lspconfig',
       }
