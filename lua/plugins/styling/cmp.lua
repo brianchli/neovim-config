@@ -65,27 +65,40 @@ if not vim.g.vscode then
           }),
 
           window = {
-            completion = cmp.config.window.bordered(),
-            documentation = cmp.config.window.bordered(),
+            completion = {
+              winhighlight = "Normal:Pmenu,FloatBorder:Pmenu,Search:None",
+              col_offset = -3,
+              side_padding = 0,
+            },
           },
 
           formatting = {
-            format = lspkind.cmp_format {
-              default = true,
-              kind = { "kind", "abbr", "menu" },
-              menu = {
-                luasnip = "[snip]",
-                buffer = "[buf]",
-                path = "[path]",
-                nvim_lsp = "[lsp]",
-              }
-            }
+            fields = { "icon", "abbr", "kind", "menu" },
+            format = function(entry, vim_item)
+              local lspkind = require("lspkind")
+              local kind = lspkind.cmp_format({
+                mode = "symbol_text",
+                maxwidth = 50,
+                menu = {
+                  luasnip = "[snip]",
+                  buffer = "[buf]",
+                  path = "[path]",
+                  nvim_lsp = "[lsp]",
+
+                },
+                ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+              })(entry, vim_item)
+              kind.icon = " " .. (kind.icon or "") .. "  "
+              kind.kind = "   (" .. (kind.kind or "") .. ")"
+              return kind
+            end,
           },
           experimental = {
-            ghost_text = {
-              hl_group = "LspCodeLens",
-            }
+            ghost_text = true
           },
+          view = {
+            entries = { follow_cursor = true }
+          }
         })
 
         cmp.setup.filetype('gitcommit', {

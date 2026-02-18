@@ -4,6 +4,7 @@ return {
   event = "VeryLazy",
   opts = {
     -- add any options here
+    presets = { inc_rename = true, lsp_doc_border = true }
   },
   keys = {
     {
@@ -46,9 +47,4 @@ return {
     --   If not available, we use `mini` as the fallback
     "rcarriga/nvim-notify",
   },
-  config = function()
-    require("noice").setup {
-      presets = { inc_rename = true }
-    }
-  end
 }

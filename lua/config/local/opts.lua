@@ -1,10 +1,3 @@
---
---╭──────────────────────────────────────────────────────────╮
---│ Options                                                  │
---│                                                          │
---╰──────────────────────────────────────────────────────────╯
---
-
 vim.wo.cursorline = true
 vim.wo.cursorcolumn = true
 
@@ -28,10 +21,10 @@ vim.opt.shortmess = vim.opt.shortmess + "c"
 vim.opt.updatetime = 150
 
 -- [[ Context ]]
-vim.opt.number = true         -- Show line numbers
-vim.opt.signcolumn = "yes"    -- Show the sign column
-vim.opt.laststatus = 3        -- Always show status line
-vim.opt.scrolloff = 4         -- Min num lines of context
+vim.opt.number = true      -- Show line numbers
+vim.opt.signcolumn = "yes" -- Show the sign column
+vim.opt.laststatus = 3     -- Always show status line
+vim.opt.scrolloff = 4      -- Min num lines of context
 
 -- [[ Filetypes ]]
 vim.opt.encoding = 'utf8'     -- String encoding to use
@@ -51,7 +44,6 @@ vim.opt.hlsearch = true   -- Highlight search matches
 -- [[ Whitespace ]]
 vim.opt.expandtab = true -- Use spaces instead of tabs
 vim.opt.shiftwidth = 4   -- Size of an indent
-vim.opt.softtabstop = 4  -- Number of spaces tabs count for in insert mode
 vim.opt.tabstop = 4      -- Number of spaces tabs count for
 vim.opt.cindent = true   -- Insert indents automatically
 
@@ -59,20 +51,10 @@ vim.opt.cindent = true   -- Insert indents automatically
 vim.opt.splitright = true -- Place new window to right of current one
 vim.opt.splitbelow = true -- Place new window below the current one
 
-
--- [[ lsp diagnostics ]]
-vim.diagnostic.config({
-  virtual_text = false,
-  signs = true,
-  underline = true,
-  update_in_insert = false,
-  severity_sort = true,
-})
-
-vim.opt.pumheight = 100 -- Maximum number of entries in a popup
+vim.opt.pumheight = 100   -- Maximum number of entries in a popup
 
 vim.opt.wildmode = "longest,list"
-vim.opt.cc = '88'
+vim.opt.cc = '120'
 
 vim.opt.spell = true
 vim.opt.spelllang = "en_au"
@@ -83,10 +65,14 @@ vim.opt.ruler = true -- always show current positions along the bottom
 vim.opt.ttyfast = true
 vim.opt.fillchars.eob = " "
 vim.opt.scrolloff = 8
+vim.opt.wrap = true           -- must be enabled to use line break
 vim.opt.linebreak = true      -- Wrap on word boundary
+vim.opt.textwidth = 120       -- word boundary
 vim.opt.numberwidth = 5       -- minimal number of columns to use for the line number {default 4}
 vim.opt.sidescrolloff = 8     -- minimal number of screen columns to keep to the left and right of the cursor if wrap is `false`
 vim.opt.iskeyword:append("-") -- treats words with `-` as single words
+vim.opt.breakindent = true
 
 vim.opt.list = true
 vim.opt.listchars = { tab = '  ', trail = '·' }
+vim.opt.winborder = "rounded"

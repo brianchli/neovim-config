@@ -1,3 +1,45 @@
+function init_cmp_colors()
+  -- Match groups
+  vim.api.nvim_set_hl(0, "CmpItemAbbrMatch", { link = "String" })
+  vim.api.nvim_set_hl(0, "CmpItemAbbrMatchFuzzy", { link = "String" })
+  vim.api.nvim_set_hl(0, "CmpItemAbbrDeprecated", { link = "BlinkCmpLabelDeprecated" })
+  vim.api.nvim_set_hl(0, "CmpItemMenu", { link = "Comment" })
+
+  -- LSP kinds → Standard highlight groups
+  vim.api.nvim_set_hl(0, "CmpItemKindText", { link = "String" })
+  vim.api.nvim_set_hl(0, "CmpItemKindMethod", { link = "Function" })
+  vim.api.nvim_set_hl(0, "CmpItemKindFunction", { link = "Function" })
+  vim.api.nvim_set_hl(0, "CmpItemKindConstructor", { link = "Function" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindField", { link = "Identifier" })
+  vim.api.nvim_set_hl(0, "CmpItemKindVariable", { link = "Identifier" })
+  vim.api.nvim_set_hl(0, "CmpItemKindProperty", { link = "Identifier" })
+  vim.api.nvim_set_hl(0, "CmpItemKindValue", { link = "Identifier" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindClass", { link = "Type" })
+  vim.api.nvim_set_hl(0, "CmpItemKindInterface", { link = "Type" })
+  vim.api.nvim_set_hl(0, "CmpItemKindStruct", { link = "Type" })
+  vim.api.nvim_set_hl(0, "CmpItemKindModule", { link = "Include" })
+  vim.api.nvim_set_hl(0, "CmpItemKindTypeParameter", { link = "Type" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindEnum", { link = "Type" })
+  vim.api.nvim_set_hl(0, "CmpItemKindEnumMember", { link = "Constant" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindKeyword", { link = "Keyword" })
+  vim.api.nvim_set_hl(0, "CmpItemKindOperator", { link = "Operator" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindConstant", { link = "Constant" })
+  vim.api.nvim_set_hl(0, "CmpItemKindReference", { link = "Identifier" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindFile", { link = "Directory" })
+  vim.api.nvim_set_hl(0, "CmpItemKindFolder", { link = "Directory" })
+
+  vim.api.nvim_set_hl(0, "CmpItemKindUnit", { link = "Number" })
+  vim.api.nvim_set_hl(0, "CmpItemKindSnippet", { link = "Special" })
+  vim.api.nvim_set_hl(0, "CmpItemKindColor", { link = "Special" })
+  vim.api.nvim_set_hl(0, "CmpItemKindEvent", { link = "Special" })
+end
+
 -- load colorschemes
 return {
   { 'Mofiqul/dracula.nvim',            name = 'dracula',     lazy = true },
@@ -65,7 +107,6 @@ return {
           local question = vim.api.nvim_get_hl(0, { name = "Search" })
           vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = statusline.bg, fg = question.fg, bold = true })
           vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = statusline.bg, fg = question.fg, bold = true })
-          vim.notify("Applied nightfly highlight overrides")
         end
       })
     end,
@@ -76,17 +117,15 @@ return {
     name = "newpaper",
     lazy = true,
     config = function()
-      vim.api.nvim_create_autocmd("ColorScheme", {
+      local set = vim.api.nvim_create_autocmd("ColorScheme", {
         pattern = "newpaper",
         callback = function()
-          local bg_color = vim.api.nvim_get_hl(0, { name = "Normal" }).bg
-          vim.api.nvim_set_hl(0, "FoldColumn", { bg = bg_color })
           -- set colors for highlighting duplicates under the cursor
           local statusline = vim.api.nvim_get_hl(0, { name = "StatusLine" })
           local question = vim.api.nvim_get_hl(0, { name = "Question" })
           vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = statusline.bg, fg = question.fg, bold = true })
           vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = statusline.bg, fg = question.fg, bold = true })
-          vim.notify("Applied newpaper highlight overrides")
+          init_cmp_colors()
         end
       })
     end,
@@ -115,8 +154,14 @@ return {
           local mode = vim.api.nvim_get_hl(0, { name = "ModeMsg" })
           vim.api.nvim_set_hl(0, "LspReferenceRead", { fg = mode.fg, bg = mode.bg, bold = true })
           vim.api.nvim_set_hl(0, "LspReferenceWrite", { fg = mode.fg, bg = mode.bg, bold = true })
-          vim.notify("Applied nordic highlight overrides")
+
+          -- Link cmp to nordic colours
+          -- Pmenu (optional, keep if you want custom popup colors)
+          vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#282C34", fg = "NONE" })
+          vim.api.nvim_set_hl(0, "Pmenu", { fg = "#C5CDD9", bg = "#22252A" })
+          init_cmp_colors()
         end
+
       })
     end
   }

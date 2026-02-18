@@ -140,11 +140,16 @@ local ignore = {
     acwrite = true,
     help = true,
     prompt = true,
+    nofile = true,
   },
   filetype = { oil = true }
 }
 
 M.render = function()
+  local win = tonumber(vim.g.statusline_winid)
+  if win ~= vim.api.nvim_get_current_win() then
+    return ""
+  end
   local buf = vim.api.nvim_get_current_buf() -- get current buffer number
   local status, navic = pcall(require, 'nvim-navic')
   local parts = {

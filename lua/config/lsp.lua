@@ -7,9 +7,7 @@ local SNACK_METHODS = {
   gD = "textDocument/declaration",
   gI = "textDocument/implementation",
   gy = "textDocument/typeDefinition",
-
   gr = "textDocument/references",
-
   gai = "callHierarchy/incomingCalls",
   gao = "callHierarchy/outgoingCalls",
 
@@ -89,12 +87,11 @@ local LSP_METHODS = {
       },
     },
   },
+
   ['textDocument/documentHighlight'] = {
     init = function(buf)
       local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
 
-      -- When cursor stops moving: Highlightsall instances of the symbol under the cursor
-      -- When cursor moves: Clears the highlighting
       vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
         buffer = buf,
         group = highlight_augroup,
@@ -107,7 +104,7 @@ local LSP_METHODS = {
         callback = vim.lsp.buf.clear_references,
       })
 
-      -- When LSP detaches: Clears the highlighting
+      -- clear highlighting on detach
       vim.api.nvim_create_autocmd('LspDetach', {
         group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
         callback = function(event2)
@@ -154,6 +151,7 @@ local LSP_METHODS = {
         end,
       })
 
+      -- invoke our custom handler to display inlay hints on current line only
       client.rpc.request = function(methods, params, handler, ...)
         if methods ~= 'textDocument/inlayHint' then
           return original_handler(methods, params, handler, ...)
@@ -189,7 +187,7 @@ local opt_def = function(o, ...)
   return _G.utils.tjoin({ silent = true, buffer = ... }, o)
 end
 
-local apply = function(client, buf)
+M.apply = function(client, buf)
   local function del(mode, lhs)
     pcall(vim.keymap.del, mode, lhs, { buffer = buf })
   end
@@ -216,7 +214,5 @@ local apply = function(client, buf)
     end
   end
 end
-
-M.apply = apply
 
 return M

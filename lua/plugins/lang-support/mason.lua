@@ -3,6 +3,9 @@ if not vim.g.vscode then
     -- set up mason
     {
       'williamboman/mason.nvim',
+      dependencies = {
+        'WhoIsSethDaniel/mason-tool-installer.nvim',
+      },
       priority = 980,
       keys = {
         {
@@ -22,42 +25,48 @@ if not vim.g.vscode then
         },
       },
     },
+
+    {
+      -- auto updates language server protocols installed via mason
+      -- uses mason names only
+      'WhoIsSethDaniel/mason-tool-installer.nvim',
+      opts = {
+        ensure_installed = {
+          "lua-language-server",
+          "ruff",
+          "sqlls",
+          "yamlls",
+          "cmake",
+          "dockerfile-language-server",
+          "astro",
+          "ts_ls",
+          "cssls",
+          "eslint",
+          "emmet_ls",
+          "lua_ls",
+          "texlab",
+          "jsonls",
+          "clangd",
+          "pylsp",
+          "marksman",
+          "harper_ls",
+          "tombi",
+          "rumdl",
+          "gopls",
+          "html"
+
+        },
+        auto_update = true,
+      },
+    },
     -- translation layer between mason lsp names and
     -- lspconfig names.
     {
       "mason-org/mason-lspconfig.nvim",
       priority = 970,
       dependencies = {
-        { "mason-org/mason.nvim" },
-        {
-          -- auto updates language server protocols installed via mason
-          -- uses mason names only
-          'WhoIsSethDaniel/mason-tool-installer.nvim',
-          opts = {
-            ensure_installed = {
-              "lua-language-server",
-              "ruff",
-              "sqlls",
-              "yamlls",
-              "cmake",
-              "dockerfile-language-server",
-              "astro",
-              "ts_ls",
-              "cssls",
-              "eslint",
-              "emmet_ls",
-              "lua_ls",
-              "texlab",
-              "jsonls",
-              "clangd",
-              "prettierd",
-              "pylsp",
-              "marksman",
-              "harper_ls",
-            },
-            auto_update = true,
-          },
-        }
+        { "mason-org/mason.nvim",
+        },
       },
       opts = {
         ensure_installed = {
@@ -78,10 +87,12 @@ if not vim.g.vscode then
           "harper_ls",
           "pylsp",
           "ruff",
-          "lua_ls"
-
+          "lua_ls",
+          "tombi",
+          "rumdl",
+          "gopls",
+          "html"
         },
-        
         automatic_enable = true
       }
     },

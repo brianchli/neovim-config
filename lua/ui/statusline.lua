@@ -193,6 +193,7 @@ local ignore = {
     acwrite = true,
     help = true,
     prompt = true,
+    nofile = true,
   },
   filetype = { oil = true }
 }
@@ -200,6 +201,10 @@ local ignore = {
 --- Creates statusline
 --- @return string statusline text to be displayed
 M.render = function()
+  local win = tonumber(vim.g.statusline_winid)
+  if win ~= vim.api.nvim_get_current_win() then
+    return ""
+  end
   local fname = vim.api.nvim_buf_get_name(0)
   local buf_num = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
   local buf = vim.api.nvim_get_current_buf() -- get current buffer number
@@ -216,18 +221,18 @@ M.render = function()
   end
 
   local parts = {
+    pad = PAD,
+    sep = SEP,
+    trunc = TRUNC,
     rec = vim.fn.reg_recording(),
     diag = get_diag_str(),
     git_info = get_path_info(),
     mod = (not get_opt("modifiable", { buf = buf_num }) and hl_ui_icons["nomodifiable"])
         or (get_opt("modified", { buf = buf_num }) and " ❲" .. hl_ui_icons["modified"] .. "❳ ")
         or " ❲–❳ ",
-    pad = PAD,
     path = get_path_info(root, fname, hl_ui_icons),
     ro = get_opt("readonly", { buf = buf_num }) and hl_ui_icons["readonly"] or "",
     scrollbar = get_scrollbar(),
-    sep = SEP,
-    trunc = TRUNC,
     venv = vim.filetype == "python" and get_py_venv() or nil,
     cursor_pos = string.format("%d,%d", unpack(vim.api.nvim_win_get_cursor(0)))
   }

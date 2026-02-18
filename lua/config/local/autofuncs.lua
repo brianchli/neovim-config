@@ -55,16 +55,28 @@ api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- display diagnostics as hovers
+-- -- display diagnostics as hovers
 api.nvim_create_autocmd("CursorHold", {
   group = augroup('diagnostic_hover'),
   buffer = bufnr,
   callback = function()
+    local diag = vim.diagnostic.config()
+    if not diag or diag.virtual_lines or diag.virtual_text or diag.underline then
+      return
+    end
     local opts = {
       focusable = false,
+      source = false,
+      header = "",
+      prefix = " ",
+      suffix = " ",
       scope = 'l',
+      ---@param diagnostic vim.Diagnostic
+      format = function(diagnostic)
+        return string.format("%s: %s", diagnostic.source, diagnostic.message)
+      end
     }
-    vim.diagnostic.open_float(nil, opts)
+    vim.diagnostic.open_float(opts)
   end,
 })
 
@@ -143,10 +155,15 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
         or ft == "NvimTree"
         or ft == "Trouble"
         or ft == "aerial"
+        or ft == "oil"
     then
       local win = vim.fn.bufwinid(ev.buf)
       if win ~= -1 then
         vim.wo[win].statusline = " " -- affects only the current window
+      end
+      -- disable diagnostic messages on these buffers
+      if bt ~= "" then
+        vim.diagnostic.enable(false)
       end
     end
   end,

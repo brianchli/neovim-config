@@ -3,6 +3,7 @@ if not vim.g.vscode then
     {
       {
         "folke/lazydev.nvim",
+        priority = 1000,
         ft = "lua", -- only load on lua files
         opts = {
           library = {
@@ -57,7 +58,8 @@ if not vim.g.vscode then
             "vimdoc",
             "lua",
             "json",
-            "tsx"
+            "tsx",
+            "go"
           },
 
           highlight = {
@@ -170,6 +172,9 @@ if not vim.g.vscode then
       lazy = false,
       ---@type snacks.Config
       opts = {
+        dim = { enabled = false },
+        image = { enabled = false },
+
         bigfile = { enabled = true },
         explorer = { enabled = true },
         indent = { enabled = true },
@@ -181,12 +186,50 @@ if not vim.g.vscode then
         picker = { enabled = true },
         quickfile = { enabled = true },
         scope = { enabled = true },
-        statuscolumn = { enabled = true },
         words = { enabled = true },
+        win = { enabled = true },
+        terminal = { enabled = true },
         styles = {
           notification = {
             wo = { wrap = true } -- Wrap notifications
-          }
+          },
+          terminal = {
+            bo = {
+              filetype = "snacks_terminal",
+            },
+            wo = {},
+            stack = true, -- when enabled, multiple split windows with the same position will be stacked together (useful for terminals)
+            keys = {
+              q = "hide",
+              gf = function(self)
+                local f = vim.fn.findfile(vim.fn.expand("<cfile>"), "**")
+                if f == "" then
+                  Snacks.notify.warn("No file under cursor")
+                else
+                  self:hide()
+                  vim.schedule(function()
+                    vim.cmd("e " .. f)
+                  end)
+                end
+              end,
+              term_normal = {
+                "<esc>",
+                function(self)
+                  self.esc_timer = self.esc_timer or (vim.uv or vim.loop).new_timer()
+                  if self.esc_timer:is_active() then
+                    self.esc_timer:stop()
+                    Snacks.terminal()
+                  else
+                    self.esc_timer:start(200, 0, function() end)
+                    return "<esc>"
+                  end
+                end,
+                mode = "t",
+                expr = true,
+                desc = "Double escape to normal mode",
+              },
+            },
+          },
         }
       },
       keys = {
@@ -262,8 +305,28 @@ if not vim.g.vscode then
         { "<leader>cR",      function() Snacks.rename.rename_file() end,                             desc = "Rename File" },
         { "<leader>gB",      function() Snacks.gitbrowse() end,                                      desc = "Git Browse",                 mode = { "n", "v" } },
         { "<leader>un",      function() Snacks.notifier.hide() end,                                  desc = "Dismiss All Notifications" },
+        { "\\",              function() Snacks.terminal() end,                                       desc = "Toggle Terminal",            mode = { "n", "t" } },
         { "]]",              function() Snacks.words.jump(vim.v.count1) end,                         desc = "Next Reference",             mode = { "n", "t" } },
         { "[[",              function() Snacks.words.jump(-vim.v.count1) end,                        desc = "Prev Reference",             mode = { "n", "t" } },
+        {
+          "<leader>N",
+          desc = "Neovim News",
+          function()
+            Snacks.win({
+              file = vim.api.nvim_get_runtime_file("doc/news.txt", false)[1],
+              width = 0.6,
+              height = 0.6,
+              wo = {
+                spell = false,
+                wrap = false,
+                signcolumn = "yes",
+                statuscolumn = " ",
+                conceallevel = 3,
+              },
+            })
+          end,
+        },
+
       },
       init = function()
         vim.api.nvim_create_autocmd("User", {
@@ -290,7 +353,7 @@ if not vim.g.vscode then
             Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>ts")
             Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>tw")
             Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>tL")
-            Snacks.toggle.diagnostics():map("<leader>td")
+            Snacks.toggle.diagnostics():map("<leader>tD")
             Snacks.toggle.line_number():map("<leader>tl")
             Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
                 :map("<leader>tc")
@@ -299,7 +362,6 @@ if not vim.g.vscode then
               "<leader>tb")
             Snacks.toggle.inlay_hints():map("<leader>th")
             Snacks.toggle.indent():map("<leader>tg")
-            Snacks.toggle.dim():map("<leader>tD")
           end,
         })
       end,

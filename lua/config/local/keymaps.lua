@@ -28,6 +28,9 @@ map("n", "<Leader>ch", ":nohl<CR>", { desc = "clear highlighting", noremap = tru
 -- format file
 map("n", "<C-u>", "<C-u>zz", { desc = "better page up", noremap = true })                -- half page scroll up
 map("n", "<C-d>", "<C-d>zz", { desc = "better page down", noremap = true })              -- half page scroll down
+-- format file
+map("n", "<C-U>", "<C-U>zz", { desc = "better page up", noremap = true })                -- half page scroll up
+map("n", "<C-D>", "<C-D>zz", { desc = "better page down", noremap = true })              -- half page scroll down
 map("n", "<leader>y", "\"+y", { desc = "yank into clipboard (normal)", noremap = true }) -- yank into clipboard normal mode
 map("v", "<leader>y", "\"+y", { desc = "yank into clipboard (visual)", noremap = true }) -- yank into clipboard visual mode
 
