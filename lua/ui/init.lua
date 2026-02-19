@@ -10,4 +10,8 @@ M.winbar.render = function()
   require('ui.winbar').render()
 end
 
+M.init = function()
+  vim.cmd.colorscheme("nordic")
+end
+
 return M

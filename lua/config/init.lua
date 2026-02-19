@@ -1,5 +1,5 @@
 local M = {
-  Local = {},
+  Editor = {},
   Lazy = {}
 }
 
@@ -53,12 +53,18 @@ local function add_prefix(prefix)
   return function(s) return prefix .. s end
 end
 
-M.Local.load = function()
-  if vim.loop.os_uname().sysname == "Darwin" then
+M.Editor.load = function()
+  -- These keybindings need to be defined before the first
+  -- is called; otherwise, it will default to "\"
+  vim.g.mapleader = ' '
+  vim.g.localleader = '\\'
+
+  local system = vim.loop.os_uname().sysname
+  if system == "Darwin" or system == "Linux" then
     local status_t = require_all(
       string_map(
-        fs_to_table("config/local"),
-        add_prefix("config.local."))
+        fs_to_table("config/editor"),
+        add_prefix("config.editor."))
     )
     for _, res in pairs(status_t) do
       assert(res)
