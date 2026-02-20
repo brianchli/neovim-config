@@ -117,13 +117,15 @@ M.diagnostics_available = function()
   return false
 end
 
--- insert grouping separators in numbers
--- viml regex: https://stackoverflow.com/a/42911668
--- lua pattern: stolen from Akinsho
-M.group_number = function(num, sep)
-  if num < 999 then return tostring(num) end
-  num = tostring(num)
-  return num:reverse():gsub("(%d%d%d)", "%1" .. sep):reverse():gsub("^,", "")
+M.abbrev_n = function(n)
+  local n = tonumber(n) or 0
+  if n >= 1e6 then
+    return string.format("%.2fm", n / 1e6)
+  elseif n >= 1e3 then
+    return string.format("%.2fk", n / 1e3)
+  else
+    return tostring(n)
+  end
 end
 
 M.stringify = function(parts, order)

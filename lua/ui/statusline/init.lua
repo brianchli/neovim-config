@@ -52,14 +52,14 @@ local SEP = "%="
 local TRUNC = "%<"
 local SBAR = { "▔", "▀", "▆", "▅", "▄", "▃", "▂", "▁", " " }
 local icon_map = {
-  ["branch"] = { "DiagnosticOk", icons.general["branch"] },
-  ["file"] = { "DiagnosticWarn", icons.general["file"] },
-  ["fileinfo"] = { "DiagnosticInfo", icons.general["hamburger"] },
-  ["nomodifiable"] = { "DiagnosticError", icons.general["lock"] },
+  ["branch"] = { "DiagnosticOk", icons.general["Branch"] },
+  ["file"] = { "DiagnosticWarn", icons.general["File"] },
+  ["fileinfo"] = { "DiagnosticInfo", icons.general["Hamburger"] },
+  ["nomodifiable"] = { "DiagnosticError", icons.general["Lock"] },
   ["modified"] = { "Directory", "+" },
-  ["readonly"] = { "DiagnosticError", icons.general["lock"] },
-  ["error"] = { "DiagnosticError", icons.general["lock"] },
-  ["warn"] = { "DiagnosticWarn", icons.general["lock"] },
+  ["readonly"] = { "DiagnosticError", icons.general["Lock"] },
+  ["error"] = { "DiagnosticError", icons.general["Lock"] },
+  ["warn"] = { "DiagnosticWarn", icons.general["Lock"] },
 }
 local hl_ui_icons = utils.hl_icons(icon_map)
 local ignore = {
@@ -84,8 +84,6 @@ local ORDER = {
   "venv",
   "sep",
   "cursor_pos",
-  "pad",
-  "fileinfo",
   "pad",
   "scrollbar",
   "pad"
@@ -128,8 +126,8 @@ M.render = function()
     diag = get_diag_str(),
     git_info = lib.get_path_info(),
     mod = (not get_opt("modifiable", { buf = buf_num }) and hl_ui_icons["nomodifiable"])
-        or (get_opt("modified", { buf = buf_num }) and " ❲" .. hl_ui_icons["modified"] .. "❳ ")
-        or " ❲–❳ ",
+        or (get_opt("modified", { buf = buf_num }) and " [" .. hl_ui_icons["modified"] .. "] ")
+        or " [–] ",
     path = lib.get_path_info(root, fname, hl_ui_icons),
     ro = get_opt("readonly", { buf = buf_num }) and hl_ui_icons["readonly"] or "",
     scrollbar = get_scrollbar(),
