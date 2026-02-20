@@ -2,12 +2,13 @@ local M = {
   statusline = {},
   winbar = {},
 }
+
 M.statusline.render = function()
-  require('ui.statusline').render()
+  vim.o.statusline = "%!v:lua.require('ui.statusline').render()"
 end
 
 M.winbar.render = function()
-  require('ui.winbar').render()
+  vim.o.winbar = "%!v:lua.require('ui.winbar').render()"
 end
 
 M.init = function()

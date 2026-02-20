@@ -17,7 +17,7 @@ local PAD = " "
 local SEP = "%="
 local TRUNC = "%<"
 
-local icons = tools.ui.icons
+local icons = icons.general
 local icon_map = {
   ["branch"] = { "DiagnosticOk", icons["branch"] },
   ["file"] = { "DiagnosticWarn", icons["file"] },
@@ -29,41 +29,18 @@ local icon_map = {
   ["warn"] = { "DiagnosticWarn", icons["lock"] },
 }
 
-local function hl_icons(icon_list)
-  local hl_syms = {}
-
-  for name, list in pairs(icon_list) do
-    hl_syms[name] = tools.hl_str(list[1], list[2])
-  end
-
-  return hl_syms
-end
-
-local hl_ui_icons = hl_icons(icon_map)
-
-local function stringify(parts)
-  local out, i = {}, 1
-  for _, k in ipairs(ORDER) do
-    local v = parts[k]
-    if v and v ~= "" then
-      out[i] = v
-      i = i + 1
-    end
-  end
-  return table.concat(out, " ")
-end
-
+local hl_ui_icons = utils.hl_icons(icon_map)
 local function get_vlinecount_str()
   local raw_count = vim.fn.line('.') - vim.fn.line('v')
   raw_count = raw_count < 0 and raw_count - 1 or raw_count + 1
-  return tools.group_number(math.abs(raw_count), ',')
+  return utils.group_number(math.abs(raw_count), ',')
 end
 
 --- Get wordcount for current buffer or visual selection
 --- @return string word count
 local function get_fileinfo_widget(icon_tbl)
   local ft = get_opt("filetype", {})
-  local lines = tools.group_number(vim.api.nvim_buf_line_count(0), ',')
+  local lines = utils.group_number(vim.api.nvim_buf_line_count(0), ',')
 
   local wc_table = vim.fn.wordcount()
   if not wc_table.visual_words or not wc_table.visual_chars then
@@ -73,19 +50,19 @@ local function get_fileinfo_widget(icon_tbl)
       '  ',
       lines,
       " l ",
-      tools.group_number(wc_table.words, ','),
+      utils.group_number(wc_table.words, ','),
       " w"
     })
   else
     -- Visual selection mode: line count, word count, and char count
     return table.concat({
-      tools.hl_str("DiagnosticInfo", '‹›'),
+      utils.hl_str("DiagnosticInfo", '‹›'),
       '  ',
       get_vlinecount_str(),
       " l ",
-      tools.group_number(wc_table.visual_words, ','),
+      utils.group_number(wc_table.visual_words, ','),
       " w ",
-      tools.group_number(wc_table.visual_chars, ','),
+      utils.group_number(wc_table.visual_chars, ','),
       " c"
     })
   end
@@ -150,7 +127,7 @@ M.render = function()
   if win ~= vim.api.nvim_get_current_win() then
     return ""
   end
-  local buf = vim.api.nvim_get_current_buf() -- get current buffer number
+  local buf = vim.api.nvim_get_current_buf()
   local status, navic = pcall(require, 'nvim-navic')
   local parts = {
     pad = PAD,
@@ -161,13 +138,9 @@ M.render = function()
         or "",
     fileinfo = get_fileinfo_widget(hl_ui_icons)
   }
-  if utils.is_ignored_buffer(buf, ignore) then
-    return ""
-  else
-    return stringify(parts)
-  end
+  return utils.is_ignored_buffer(buf, ignore)
+      and ""
+      or utils.stringify(parts, ORDER)
 end
-
-vim.o.winbar = "%!v:lua.require('ui.winbar').render()"
 
 return M
