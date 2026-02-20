@@ -6,12 +6,12 @@ if not vim.g.vscode then
     opts = { use_diagnostic_signs = true },
     keys = {
       {
-        "<leader>xx",
+        "<leader>xX",
         "<cmd>Trouble diagnostics toggle<cr>",
         desc = "toggle trouble"
       },
       {
-        "<leader>xX",
+        "<leader>xx",
         "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
         desc = "Buffer Diagnostics (Trouble)",
       },

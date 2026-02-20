@@ -174,7 +174,6 @@ if not vim.g.vscode then
       opts = {
         dim = { enabled = false },
         image = { enabled = false },
-
         bigfile = { enabled = true },
         explorer = { enabled = true },
         indent = { enabled = true },
@@ -348,7 +347,6 @@ if not vim.g.vscode then
             else
               vim.print = _G.dd
             end
-
             -- Create some toggle mappings
             Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>ts")
             Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>tw")
