@@ -182,7 +182,42 @@ if not vim.g.vscode then
           enabled = true,
           timeout = 3000,
         },
-        picker = { enabled = true },
+        picker = {
+          enabled = true,
+          actions = {
+            opencode_send = function(picker)
+              local selected = picker:selected({ fallback = true })
+              if selected and #selected > 0 then
+                local files = {}
+                for _, item in ipairs(selected) do
+                  if item.file then
+                    table.insert(files, item.file)
+                  end
+                end
+                picker:close()
+
+                require("opencode.core").open({
+                  new_session = false,
+                  focus = "input",
+                  start_insert = true,
+                })
+
+                local context = require("opencode.context")
+                for _, file in ipairs(files) do
+                  context.add_file(file)
+                end
+              end
+            end,
+          },
+          win = {
+            input = {
+              keys = {
+                -- Use <localleader>o or any preferred key to send files to opencode
+                ["<localleader>o"] = { "opencode_send", mode = { "n", "i" } },
+              },
+            },
+          },
+        },
         quickfile = { enabled = true },
         scope = { enabled = true },
         words = { enabled = true },
