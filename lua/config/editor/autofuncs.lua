@@ -20,7 +20,7 @@ api.nvim_create_autocmd({ "BufEnter", "BufNew" }, {
 vim.api.nvim_create_autocmd("TextYankPost", {
   group = augroup("highlight_yank"),
   callback = function()
-    vim.highlight.on_yank()
+    vim.hl.on_yank()
   end,
 })
 
@@ -107,13 +107,28 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- wrap and check for spelling in text filetypes
-vim.api.nvim_create_autocmd("FileType", {
-  group = augroup("wrap_spell"),
-  pattern = { "gitcommit", "markdown, text" },
+-- Reduce wrap boundary for certain file types
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  group = augroup("increase_wrap"),
+  pattern = { "*.git", "*.md", "*.txt", "*.yml", "*.toml" },
   callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.spell = true
+    vim.o.spell = true
+    vim.o.linebreak = true
+    vim.o.wrap = true
+    vim.o.colorcolumn = "80"
+    vim.o.textwidth = 80
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWinLeave", {
+  group = augroup("reduce_wrap"),
+  pattern = { "*.git", "*.md", "*.txt", "*.yml", "*.toml" },
+  callback = function()
+    vim.o.spell = false
+    vim.o.linebreak = false
+    vim.o.wrap = false
+    vim.o.colorcolumn = "120"
+    vim.o.textwidth = 120
   end,
 })
 
@@ -126,8 +141,9 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+
 -- Check if we need to reload the file when it changed
-vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave", "WinEnter" }, {
   group = augroup("checktime"),
   command = "checktime",
 })
@@ -152,7 +168,7 @@ vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
     then
       local win = vim.fn.bufwinid(ev.buf)
       if win ~= -1 then
-        vim.wo[win].statusline = " "         -- affects only the current window
+        vim.wo[win].statusline = " " -- affects only the current window
       end
     end
   end,

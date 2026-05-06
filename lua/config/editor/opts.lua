@@ -56,7 +56,7 @@ vim.opt.pumheight = 100   -- Maximum number of entries in a popup
 vim.opt.wildmode = "longest,list"
 vim.opt.cc = '120'
 
-vim.opt.spell = true
+vim.opt.spell = false
 vim.opt.spelllang = "en_au"
 vim.opt.swapfile = false
 
@@ -65,8 +65,8 @@ vim.opt.ruler = true -- always show current positions along the bottom
 vim.opt.ttyfast = true
 vim.opt.fillchars.eob = " "
 vim.opt.scrolloff = 8
-vim.opt.wrap = true           -- must be enabled to use line break
-vim.opt.linebreak = true      -- Wrap on word boundary
+vim.opt.wrap = false          -- must be enabled to use line break
+vim.opt.linebreak = false
 vim.opt.textwidth = 120       -- word boundary
 vim.opt.numberwidth = 5       -- minimal number of columns to use for the line number {default 4}
 vim.opt.sidescrolloff = 8     -- minimal number of screen columns to keep to the left and right of the cursor if wrap is `false`

@@ -24,8 +24,8 @@ local icon_map = {
   ["readonly"] = { "DiagnosticError", icons.general["Lock"] },
   ["error"] = { "DiagnosticError", icons.general["Lock"] },
   ["warn"] = { "DiagnosticWarn", icons.general["Lock"] },
-  ["lines"] = { "Question", icons.kinds["Keyword"] },
-  ["words"] = { "Constant", icons.lspkind["Text"] },
+  ["lines"] = { "Question", icons.general["Doc"] },
+  ["words"] = { "Constant", icons.kinds["Keyword"] },
   ["chars"] = { "Conditional", icons.kinds["Text"] },
 }
 
@@ -57,11 +57,9 @@ local function get_fileinfo_widget(icon_t)
     " ",
     "[",
     icon_t.words,
-    " ",
     utils.pad_str(words, min_pad, ALIGN),
     "] ",
     icon_t.chars,
-    " ",
     utils.pad_str(chars, min_pad, ALIGN),
     "]",
   })

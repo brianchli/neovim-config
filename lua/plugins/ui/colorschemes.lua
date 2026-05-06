@@ -131,11 +131,45 @@ return {
     end,
   },
   {
+    "mofiqul/vscode.nvim",
+    name = "vscode",
+    lazy = true,
+    opts = {
+      italic_inlayhints = true,
+      italic_comments = true,
+    },
+    init = function()
+      vim.api.nvim_create_autocmd("ColorSchemePre", {
+        pattern = "nordic",
+        callback = function()
+          vim.o.background = 'dark'
+        end
+      })
+      local set = vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "vscode",
+        callback = function()
+          -- set colors for highlighting duplicates under the cursor
+          local statusline = vim.api.nvim_get_hl(0, { name = "StatusLine" })
+          local question = vim.api.nvim_get_hl(0, { name = "Question" })
+          vim.api.nvim_set_hl(0, "LspReferenceRead", { bg = statusline.bg, fg = question.fg, bold = true })
+          vim.api.nvim_set_hl(0, "LspReferenceWrite", { bg = statusline.bg, fg = question.fg, bold = true })
+          init_cmp_colors()
+        end
+      })
+    end,
+  },
+  {
     'AlexvZyl/nordic.nvim',
     name = 'nordic',
     lazy = false,
     priority = 1000,
     config = function()
+      vim.api.nvim_create_autocmd("ColorSchemePre", {
+        pattern = "vscode", -- only for nordic
+        callback = function()
+          vim.o.background = 'light'
+        end
+      })
       vim.api.nvim_create_autocmd("ColorScheme", {
         pattern = "nordic", -- only for nordic
         callback = function()
